@@ -15,10 +15,15 @@
 - 实际上在这里每个tensor core处理的fragment就是计算矩阵的最小单位，对应于navie的gemm里面最小的处理单位是每个线程负责的算的一个C矩阵中的一个元素。
 - 根据上面的分层情况来看我们需要遍历block，warp_tile；算出warp_tile里面的一个一个的fragment；这样写代码的思路就显而易见了。
 - 只需要盯住一个warp_tile的计算就可以实现整个gemm了
-1. 对于共享内存的声明
+1. 对于共享内存的声明（推荐用方式1）
 ```c++
+	  // 方式1
 	  extern __shared__ half shmem[];
 	  half* A_block_smem = shmem;
 	  half* B_block_smem = &shmem[BM_dim * BK_dim];
+	  // 方式2
+	  __shared__ half A_block_smem[BM_dim][BK_dim];
+	  __shared__ half B_block_smem[BK_dim][BN_dim];
 ```
-2. 
+2. 由于是处理bf16的gemm，此时每个寄存器能处理两个元素，可以声明一个fragment的数组为：`uint32_t acc_register[mma_tiles_per_warp_m][mma_tiles_per_warp_n][2];`。
+3. 
