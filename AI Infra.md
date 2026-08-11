@@ -27,4 +27,7 @@
 ```
 2. 每个 MMA tile 用 2 个 `uint32_t` 存累加器，可以声明一个fragment的数组为：`uint32_t acc_register[mma_tiles_per_warp_m][mma_tiles_per_warp_n][2];`。epilogue（收尾阶段）要做标量的 fp16 运算，打包成 uint32 后很难直接算：`half (&acc_register_) [mma_tiles_per_warp_m][mma_tiles_per_warp_n][4] = reinterpret_cast<half(&)[mma_tiles_per_warp_m][mma_tiles_per_warp_n][4]>(acc_register);`。
 > `(&arr_name)[x][y][z]` 和 `&arr_name[x][y][z]`的区别：前者是对数组下标解引用
-3. 
+3. mma矩阵乘：`mma`指令强制要求32位寄存器操作数，fp16 按“2个/寄存器”打包，所以代码层面必须用 `uint32_t`
+4. epilogue累加：要做逐 half 的标量乘加，用 `half` 视图写起来直观。
+5. `__syncthreads()`只做块内同步，在块内准备工作做好即将进入更细分的`warp_tile`中间得插入这条同步指令。在每个块的循环结束的末尾得插入这条指令是为了？
+6. 在最底层对一个fragment做矩阵乘的时候用的是内积转外积的方式
