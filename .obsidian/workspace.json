@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "cuda.md",
+                "file": "AI Infra.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "cuda"
+              "title": "AI Infra"
             }
           }
         ]
@@ -83,7 +83,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "7c083ff4b03fc5b5",
@@ -99,7 +100,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "cuda.md",
+                "file": "AI Infra.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +119,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "cuda.md",
+                "file": "AI Infra.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +162,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "cuda.md",
+                "file": "AI Infra.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -169,12 +170,23 @@
               "icon": "lucide-list",
               "title": "大纲"
             }
+          },
+          {
+            "id": "37e1ae19d6591747",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
+    "width": 200,
     "collapsed": true
   },
   "left-ribbon": {
@@ -191,6 +203,6 @@
   },
   "active": "8fb752a724bc9b98",
   "lastOpenFiles": [
-    "cuda.md"
+    "AI Infra.md"
   ]
 }
