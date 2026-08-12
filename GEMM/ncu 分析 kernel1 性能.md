@@ -224,15 +224,17 @@ L2 Hit Rate                            %        64.76
 
 **判读**:
 
-- **sectors/request = 2.06**:每个 warp 的 global load 请求只搬 2 个 sector(64B)。
+- **sectors/request = 2.06**:每个 warp 的 global load ==请求只搬 2 个 sector(64B)==。
   这是 2B 标量 load 的天花板(32 线程 × 2B);合并本身没浪费,但相比 float4(16B/线程)
-  指令数多 8 倍、在途字节数少 8 倍。
+  ==指令数多 8 倍==、在途字节数少 8 倍。向量化之后：每线程 `LDG.128` 读 **16 字节** → 32 线程 × 16B = 512B → **16 个 sector**
 - **smem load bank conflicts ≈ 2.35 亿次**:巨量!A tile 在 smem 里行距 64 half = 128B,
   正好是 32 bank × 4B 的整倍数,`ldmatrix` 一次读的 8 行全落在相同 bank 上,
   每次 ldmatrix 被串行化。写侧仅 1.2 万次,基本无冲突。
 - **L2 Hit 64.8% / DRAM 20GB/s**:B 面板重读大多命中 L2,所以第 1 步 DRAM 才 1% ——
   再次确认瓶颈不在带宽。
-
+```plain
+带宽 = 在途字节数 ÷ 往返延迟
+```
 常用 memory 指标速查:
 
 | 指标 | 健康值 | 异常说明 |
@@ -312,14 +314,14 @@ total samples: 551603
 
 ## 诊断结论:kernel1 的优化方向(按收益排序)
 
-| # | 优化 | 针对的证据 | 对应本仓库的演进 |
-|---|---|---|---|
-| 1 | 拷贝向量化(float4 一次 16B)+ load/store 分离(先全 load 到寄存器再统一 store) | sectors/request=2、STS 等 LDG | `tileMemcpyUnrolledVectorized` / `tileMemcpyLoad`(kernel2/3) |
-| 2 | `cp.async` 异步拷贝:gmem→smem 不过寄存器、不阻塞 warp | 两条 STS 的 long_sb 占 67% | kernel5/6 |
-| 3 | smem swizzle / padding 消灭 bank conflict | 2.35 亿次 smem load 冲突 | `tileMemcpySwizzle`(kernel4) |
-| 4 | `mma.m16n8k16` 替代 m16n8k8,指令数减半 | HMMA 密度、mio 压力 | kernel9 |
-| 5 | 多级流水 / 双缓冲,overlap 拷贝与计算 | barrier + long_sb | kernel6/9 |
-| 6 | 次要:tile 尺寸匹配 SM 数,消除 wave 尾部 | Waves Per SM = 2.37 | kernel9 的按尺寸选 tile |
+| #   | 优化                                                         | 针对的证据                       | 对应本仓库的演进                                                     |
+| --- | ---------------------------------------------------------- | --------------------------- | ------------------------------------------------------------ |
+| 1   | 拷贝向量化(float4 一次 16B)+ load/store 分离(先全 load 到寄存器再统一 store) | sectors/request=2、STS 等 LDG | `tileMemcpyUnrolledVectorized` / `tileMemcpyLoad`(kernel2/3) |
+| 2   | `cp.async` 异步拷贝:gmem→smem 不过寄存器、不阻塞 warp                   | 两条 STS 的 long_sb 占 67%      | kernel5/6                                                    |
+| 3   | smem swizzle / padding 消灭 bank conflict                    | 2.35 亿次 smem load 冲突        | `tileMemcpySwizzle`(kernel4)                                 |
+| 4   | `mma.m16n8k16` 替代 m16n8k8,指令数减半                            | HMMA 密度、mio 压力              | kernel9                                                      |
+| 5   | 多级流水 / 双缓冲,overlap 拷贝与计算                                   | barrier + long_sb           | kernel6/9                                                    |
+| 6   | 次要:tile 尺寸匹配 SM 数,消除 wave 尾部                               | Waves Per SM = 2.37         | kernel9 的按尺寸选 tile                                           |
 
 ---
 
