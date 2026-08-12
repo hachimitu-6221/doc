@@ -88,7 +88,9 @@ OPT   This workload exhibits low compute throughput and memory bandwidth
 2. **延迟受限（latency-bound）**：每个线程的工作量太小、依赖链太长、或者频繁同步（`__syncthreads`），线程一直在"等"而不是"算"。
 3. **Occupancy 太低**：寄存器/shared memory 用太多，每个 SM 上同时驻留的 warp 太少，没有足够的 warp 来隐藏访存和指令延迟。
 4. **Kernel 执行时间太短**：如果 kernel 只跑几微秒，启动开销（launch overhead）占比很大，利用率自然难看。可以在 ncu 的 Summary 里看 kernel 的实际执行时长。
+
 **排查方向**：
+
 5. **看 Occupancy 部分**（Theoretical vs Achieved Occupancy）：如果 Achieved Occupancy 远低于 Theoretical，说明活跃 warp 不够；如果 Theoretical 本身就低，查寄存器/shared memory 用量。 
 6. **看 Launch Statistics**：确认 grid size / block size，计算 `grid × block / (SM数 × 2048)`，看能不能填满显卡。
 7. **看 Warp State Statistics**：看 warp 主要 stall 在什么上——`Stall Long Scoreboard`（等访存）、`Stall Wait / Short Scoreboard`（等依赖）、`Stall Barrier`（等同步）能直接告诉你延迟卡在哪。
@@ -144,7 +146,9 @@ occupancy 低（每调度器只有 3.52 个 warp）
 - **寄存器用量过高**：看 Occupancy 部分的 Theoretical Occupancy 和 Registers Per Thread。如果每线程用了 128+ 个寄存器，一个 SM 驻留不了几个 block。可以用 `__launch_bounds__` 或编译选项 `-maxrregcount` 限制（代价是可能 spill）。
 - **Shared memory 用量过高**：每 block 申请的 shared memory 太大也会限制驻留 block 数。
 - **Block size 太小**：比如 block 只有 32/64 线程，SM 的 block 槽位（一般 32 个）先被占满，warp 数上不去。一般 128~256 线程/block 比较合适。
+
 **减少等待本身的排查方向**
+
 - **检查访存是否合并（coalesced）**：看 Memory Workload Analysis 里 L1/L2 的 sector 命中率。如果相邻线程访问的地址不连续，一个 warp 的访存会被拆成很多笔事务，延迟和次数都暴涨。
 - **增加每个线程的 ILP**：让一个线程做多个独立的访存/计算（比如一次处理 2~4 个元素），单个 warp 内部也有更多可并行的指令，不那么依赖 warp 数量来藏延迟。
 - **数据能否搬进 shared memory**：如果有复用，先合并地读进 shared memory 再计算。
@@ -181,11 +185,12 @@ Achieved Occupancy                        %        22.01
 Achieved Active Warps Per SM           warp        14.08
 ```
 **判读**:
-- "Block Limit" 一行是排除法:取各资源的最小值 → 每 SM 只能驻 **2 个 CTA**(16 warp)
-  - 寄存器:106 regs/thread × 256 thread × 2 ≈ 54K,贴近 64K/SM 上限
-  - smem:50KB/CTA × 2 = 100KB,贴近 102.4KB 配置
-- Theoretical Occupancy 25%,Achieved 22% —— 正是第 2 步 `3.52 warp/scheduler` 的来源
-- 次要问题:`Waves Per SM = 2.37`,最后一波只装满 37%,有尾部浪费(grid 最好整除波数)
+- **106 个寄存器/线程**：你的显卡每个 SM 有 65536 个寄存器，一个 block 有 256 线程 × 106 = 27136 个寄存器，65536 / 27136 ≈ 2.4，所以**最多驻留 2 个 block**。
+- **49.15 KB 动态 shared memory/block**：102.4 KB 的配置 ÷ 49.15 KB ≈ 2，**同样最多驻留 2 个 block**。
+- 两者叠加 → 每个 SM 只能跑 2 block = 16 warp → **理论 occupancy 上限就只有 25%**。你实测 22%，已经很接近天花板了——说明不是调度问题，是这个上限本身太低。
+
+**另外还有一个次要问题——尾巴效应（tail effect）：**
+Waves Per SM = 2.37，意思是 512 个 block 要分 2.37 波跑完。最后一波只有 0.37 波是满的，ncu 提示这个不完整的波可能占了总时间的 33.3%。**最后那一小波里，大部分 SM 已经跑完在空等**——这也解释了之前"89% 发射槽空闲"的一部分。
 > **注意**:对大 tile GEMM,低 occupancy 本身不是罪(高性能 GEMM 常只有 2 CTA/SM),
 > 关键是**有没有别的手段在少数 warp 内掩盖延迟**(ILP、cp.async、多级流水、双缓冲)。
 > kernel1 的问题是这些手段一个都没有。
