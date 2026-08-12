@@ -33,52 +33,49 @@
 6. 在最底层对一个fragment做矩阵乘的时候用的是内积转外积的方式，只要保证mma_k在最外层，mma_m和mma_n的顺序暂时不用考虑，谁在最里面都行。
 
 #### 性能分析
-- 先拿基准数字（GFLOPS)，知道离峰值多远
-```bash
-ncu --kernel-name "regex:kernel_1" \
---launch-count 1 \
---section SpeedOfLight \
-./build/runner 1 1 4096 4096 4096 2>&1 | tail -40
+-## 第 5 步结果解读：PC sampling 精确定位"凶手"
 
-==PROF== Connected to process 1609362 (/root/MLOPS/matmul-playground/build/runner)
-==PROF== Profiling "kernel_1": 0%....50%....100% - 9 passes
-60.9316 GFLOPS/sec for 4096x4096x4096
-==PROF== Disconnected from process 1609362
-[1609362] runner@127.0.0.1
-  void kernel_1<256, 128, 64, 64, 64, 32, 256>(__half *, __half *, __half *, __half *, float, float, unsigned int, unsigned int, unsigned int) (32, 16, 1)x(64, 4, 1), Context 1, Stream 7, Device 0, CC 8.0
-    Section: GPU Speed Of Light Throughput
-    ----------------------- ----------- ------------
-    Metric Name             Metric Unit Metric Value
-    ----------------------- ----------- ------------
-    DRAM Frequency                  Ghz         1.59
-    SM Frequency                    Ghz         1.14
-    Elapsed Cycles                cycle     11341091
-    Memory Throughput                 %        26.50
-    DRAM Throughput                   %         1.00
-    Duration                         ms         9.96
-    L1/TEX Cache Throughput           %        28.67
-    L2 Cache Throughput               %         8.42
-    SM Active Cycles              cycle  10465593.80
-    Compute (SM) Throughput           %        10.02
-    ----------------------- ----------- ------------
+55 万次 stall 采样里，分布一目了然：
 
-    OPT   This workload exhibits low compute throughput and memory bandwidth utilization relative to the peak           
-          performance of this device. Achieved compute throughput and/or memory bandwidth below 60.0% of peak           
-          typically indicate latency issues. Look at Scheduler Statistics and Warp State Statistics for potential       
-          reasons.
 ```
-- **SpeedOfLight** 看大方向：SM 利用率高还是显存带宽高 → 判断 compute bound 还是 memory bound
+   all   longSB  SASS
+230714   225180  STS.U16 [R7], R2        ← A tile 的 smem 存储
+138203   122473  STS.U16 [R7+0x8000], R2 ← B tile 的 smem 存储(+32KB 偏移)
+  7640     3819  LDG.E.U16 ...           ← 对应的 global 标量 load
+  4765     4622  HMMA.1688 (short_sb)    ← mma 等 smem 数据(bank conflict)
+```
 
-| 指标                      | 值       | 含义              |
-| ----------------------- | ------- | --------------- |
-| Compute (SM) Throughput | **10%** | SM 内部最忙的流水线的利用率 |
-| Memory Throughput       | 26.5%   | 显存子系统整体利用率      |
-| DRAM Throughput         | **1%**  | 真正打到 HBM 的带宽    |
-**判读规则**：两个都低（<60%）说明既没吃满算力也没吃满带宽 → kernel 是 **latency bound（延迟受限）**:warp 大量时间在"等"，等的过程中没有别的 warp 能顶上来干活。
-ncu 自己也给了提示：`Look at Scheduler Statistics and Warp State Statistics`。这就是我们下一步。
+**前两行就吃掉了 67% 的 stall**，而且 stall 类型是 `long_sb`——`STS` 不是写不动，而是在**等它要写的那个寄存器 R2，也就是前一条 `LDG.E.U16` 从 global 回来的数据**。
 
-- 往哪边深钻：compute 侧看 tensor pipe 利用率、指令发射；memory 侧看DRAM/L2/smem 各级流量和冲突
-- **Warp State** 看 stall 原因——SM 利用率不高时，warp 到底在等什么
-- Occupancy、launch 配置等辅助信息
-- 数据 → 假设 → 改代码 → 再 profile 验证
+这就把整条证据链闭环了：
+
+```
+标量 LDG.U16(2B, ~500拍延迟)
+   → 紧跟一条依赖它的 STS(干等,无法 run-ahead)
+   → __syncthreads() 把全 block 锁住
+   → 每 SM 只有 16 个 warp,没人能填这些空拍
+   → SM 10% 利用率
+```
+
+**kernel1 的诊断结论**（按收益排序的优化方向）:
+
+1. **拷贝向量化 + load/store 分离**:float4 一次搬 16B,LDG 数量少 8 倍；先把整个 tile load 到寄存器再 store,load 之间互相掩盖延迟 → 对应 `tileMemcpyUnrolledVectorized` / `tileMemcpyLoad`（这就是 kernel2/3 的方向）
+2. **cp.async**:sm_80 的异步拷贝直接 gmem→smem 不过寄存器、不阻塞 warp → 彻底消灭这两行 STS 的 stall(kernel5/6 的方向）
+3. **smem swizzle**：消灭 2.35 亿次 bank conflict(kernel4 引入 `tileMemcpySwizzle`)
+4. 次要：`m16n8k16` 减半指令数；occupancy / wave 尾部调 tile 尺寸
+## 方法论总结（以后分析任何 kernel 都按这个顺序）
+
+```
+runner 跑 GFLOPS        → 离峰值多远?
+SpeedOfLight            → compute bound / memory bound / latency bound?
+  ├─ compute 高        → ComputeWorkloadAnalysis 看哪条 pipe 满
+  ├─ memory 高         → MemoryWorkloadAnalysis 看 DRAM/L2/L1 哪级是瓶颈
+  └─ 双低              → SchedulerStats + WarpStateStats 看 stall 原因
+Occupancy               → 什么资源限制常驻 warp 数
+MemoryWorkloadAnalysis  → 合并效率(sectors/request)、bank conflict、命中率
+SourceCounters          → PC sampling 把 stall 钉到具体代码行
+```
+
+一个实用技巧：在 CMakeLists 给 nvcc 加 `-lineinfo`,`--page source` 就能直接对应到 CUDA 源码行而不是 SASS。
+**建议的练习**：你自己对 kernel2 跑一遍同样的流程（`runner 2`)，对比 kernel1 看 `long_sb` 那两行 STS 是否消失、SOL 的 Compute% 涨了多少——验证"向量化拷贝"这个假设是否真的击中了瓶颈。做完把数字拿来，我们一起对；或者你说继续，我直接带你对比 kernel1→kernel6 每一代解决了哪个 stall。
 ----
