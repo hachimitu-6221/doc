@@ -4,6 +4,20 @@
 > 对象:`MLOPS/matmul-playground` 的 `kernel1`(smem tile + `mma.m16n8k8` 的 HGEMM)
 > 目标:演示一套**自顶向下、可复现**的 ncu 性能分析流程,从基准数字一路定位到具体代码行
 ---
+常见对照表
+
+| 症状                               | 病根                | 处方                       |
+| -------------------------------- | ----------------- | ------------------------ |
+| STS/LDS 上 long\_sb 爆表            | 同步搬运，LDG 数据没回来就等  | 向量化 + cp.async + 多级流水    |
+| sectors/request 卡在 2             | 标量 2B load，粒度太小   | 128-bit 向量化              |
+| sectors/request 远超理论值            | 地址不连续，合并差         | 改访存模式/换布局                |
+| bank conflict 百万级                | smem 行距是 128B 整倍数 | XOR swizzle / padding    |
+| HMMA 上 short\_sb                 | mma 等 smem 数据     | 修 swizzle + fragment 双缓冲 |
+| mio stall 高                      | 访存指令太多            | 向量化（指令数 ÷8）              |
+| Waves 2.x、OPT 提示 tail            | 尾波不满              | 按 SM 数取整 grid / split-K  |
+| Achieved ≪ Theoretical Occupancy | 调度/负载不均           | 查尾波、查 launch 配置          |
+| Compute% 高且 tensor pipe 满        | 到算力顶了             | 换更大 tile 提复用，或收工         |
+
 ## 0. 方法论总览(分析任何 kernel 都按这个顺序)
 
 ```
