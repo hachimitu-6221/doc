@@ -31,3 +31,54 @@
 4. epilogue累加：要做逐 half 的标量乘加，用 `half` 视图写起来直观。
 5. `__syncthreads()`只做块内同步，在块内准备工作做好即将进入更细分的`warp_tile`中间得插入这条同步指令。在每个块的循环结束的末尾得插入这条指令是为了？
 6. 在最底层对一个fragment做矩阵乘的时候用的是内积转外积的方式，只要保证mma_k在最外层，mma_m和mma_n的顺序暂时不用考虑，谁在最里面都行。
+
+#### 性能分析
+- 先拿基准数字（GFLOPS)，知道离峰值多远
+```bash
+ncu --kernel-name "regex:kernel_1" \
+--launch-count 1 \
+--section SpeedOfLight \
+./build/runner 1 1 4096 4096 4096 2>&1 | tail -40
+
+==PROF== Connected to process 1609362 (/root/MLOPS/matmul-playground/build/runner)
+==PROF== Profiling "kernel_1": 0%....50%....100% - 9 passes
+60.9316 GFLOPS/sec for 4096x4096x4096
+==PROF== Disconnected from process 1609362
+[1609362] runner@127.0.0.1
+  void kernel_1<256, 128, 64, 64, 64, 32, 256>(__half *, __half *, __half *, __half *, float, float, unsigned int, unsigned int, unsigned int) (32, 16, 1)x(64, 4, 1), Context 1, Stream 7, Device 0, CC 8.0
+    Section: GPU Speed Of Light Throughput
+    ----------------------- ----------- ------------
+    Metric Name             Metric Unit Metric Value
+    ----------------------- ----------- ------------
+    DRAM Frequency                  Ghz         1.59
+    SM Frequency                    Ghz         1.14
+    Elapsed Cycles                cycle     11341091
+    Memory Throughput                 %        26.50
+    DRAM Throughput                   %         1.00
+    Duration                         ms         9.96
+    L1/TEX Cache Throughput           %        28.67
+    L2 Cache Throughput               %         8.42
+    SM Active Cycles              cycle  10465593.80
+    Compute (SM) Throughput           %        10.02
+    ----------------------- ----------- ------------
+
+    OPT   This workload exhibits low compute throughput and memory bandwidth utilization relative to the peak           
+          performance of this device. Achieved compute throughput and/or memory bandwidth below 60.0% of peak           
+          typically indicate latency issues. Look at Scheduler Statistics and Warp State Statistics for potential       
+          reasons.
+```
+- **SpeedOfLight** 看大方向：SM 利用率高还是显存带宽高 → 判断 compute bound 还是 memory bound
+
+| 指标                      | 值       | 含义              |
+| ----------------------- | ------- | --------------- |
+| Compute (SM) Throughput | **10%** | SM 内部最忙的流水线的利用率 |
+| Memory Throughput       | 26.5%   | 显存子系统整体利用率      |
+| DRAM Throughput         | **1%**  | 真正打到 HBM 的带宽    |
+**判读规则**：两个都低（<60%）说明既没吃满算力也没吃满带宽 → kernel 是 **latency bound（延迟受限）**:warp 大量时间在"等"，等的过程中没有别的 warp 能顶上来干活。
+ncu 自己也给了提示：`Look at Scheduler Statistics and Warp State Statistics`。这就是我们下一步。
+
+- 往哪边深钻：compute 侧看 tensor pipe 利用率、指令发射；memory 侧看DRAM/L2/smem 各级流量和冲突
+- **Warp State** 看 stall 原因——SM 利用率不高时，warp 到底在等什么
+- Occupancy、launch 配置等辅助信息
+- 数据 → 假设 → 改代码 → 再 profile 验证
+----
