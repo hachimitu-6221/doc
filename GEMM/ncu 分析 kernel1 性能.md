@@ -16,12 +16,9 @@ Occupancy               → 什么资源限制了常驻 warp 数
 MemoryWorkloadAnalysis  → 合并效率(sectors/request)、bank conflict、各级命中率
 SourceCounters          → PC sampling 把 stall 精确定位到具体指令/代码行
 ```
-
 核心原则:**先看大方向(SOL),再往瓶颈一侧逐级下钻,最后用 PC sampling 钉到代码行。
 数据 → 假设 → 改代码 → 再 profile 验证。**
-
 通用命令模板:
-
 ```bash
 cd MLOPS/matmul-playground
 
@@ -38,15 +35,12 @@ ncu --kernel-name "regex:kernel_1" --launch-count 1 \
 > 两者**不能混着比**;优化前后对比要用同一组 profile 数据。
 
 ---
-
 ## 第 0 步:基准数字 —— 离峰值多远?
 
 ```bash
 ./build/runner 1 10 4096 4096 4096
 ```
-
 输出:
-
 ```
 13358.8 GFLOPS/sec for 4096x4096x4096
 ```
@@ -54,17 +48,13 @@ ncu --kernel-name "regex:kernel_1" --launch-count 1 \
 **判读**:13.4 TFLOPS ≈ A800 FP16 峰值(312 TFLOPS)的 **4%**。提升空间巨大,值得 profile。
 
 ---
-
 ## 第 1 步:SpeedOfLight —— 定大方向
-
 ```bash
 ncu --kernel-name "regex:kernel_1" --launch-count 1 \
     --section SpeedOfLight \
     ./build/runner 1 1 4096 4096 4096
 ```
-
 输出(节选):
-
 ```
 Section: GPU Speed Of Light Throughput
 ----------------------- ----------- ------------
@@ -93,21 +83,26 @@ OPT   This workload exhibits low compute throughput and memory bandwidth
 | 高 (>60%) | 低 | compute bound | ComputeWorkloadAnalysis 看哪条 pipe |
 | 低 | 高 (>60%) | memory bound | MemoryWorkloadAnalysis 看哪级缓存 |
 | **低** | **低** | **latency bound(warp 在干等)** | **SchedulerStats + WarpStateStats** |
-
-kernel1:Compute 10%、DRAM 1% → **典型 latency bound**。ncu 的 OPT 提示也指向同一处。
+造成上述情况的可能有以下几种情况：
+1. **Kernel 太小 / 并行度不够**：启动的 block 或线程太少，填不满整张卡的 SM。比如 grid 只有几十个 block，而显卡有上百个 SM，大部分 SM 根本没活干。
+2. **延迟受限（latency-bound）**：每个线程的工作量太小、依赖链太长、或者频繁同步（`__syncthreads`），线程一直在"等"而不是"算"。
+3. **Occupancy 太低**：寄存器/shared memory 用太多，每个 SM 上同时驻留的 warp 太少，没有足够的 warp 来隐藏访存和指令延迟。
+4. **Kernel 执行时间太短**：如果 kernel 只跑几微秒，启动开销（launch overhead）占比很大，利用率自然难看。可以在 ncu 的 Summary 里看 kernel 的实际执行时长。
+排查方向：
+5. **看 Occupancy 部分**（Theoretical vs Achieved Occupancy）：如果 Achieved Occupancy 远低于 Theoretical，说明活跃 warp 不够；如果 Theoretical 本身就低，查寄存器/shared memory 用量。 
+6. **看 Launch Statistics**：确认 grid size / block size，计算 `grid × block / (SM数 × 2048)`，看能不能填满显卡。
+7. **看 Warp State Statistics**：看 warp 主要 stall 在什么上——`Stall Long Scoreboard`（等访存）、`Stall Wait / Short Scoreboard`（等依赖）、`Stall Barrier`（等同步）能直接告诉你延迟卡在哪。
+8. **看 kernel 时长**：如果只有几 μs，问题可能是"活儿太小"，考虑合并多个小 kernel、增大单次处理的数据量。
+kernel1:Compute 10%、DRAM 1% → **典型 latency bound**。ncu 的 ==OPT== 提示也指向同一处；要我去==Look at Scheduler Statistics and Warp State Statistics==
 
 ---
-
 ## 第 2 步:Scheduler + Warp State —— warp 在等什么?
-
 ```bash
 ncu --kernel-name "regex:kernel_1" --launch-count 1 \
     --section SchedulerStats --section WarpStateStats \
     ./build/runner 1 1 4096 4096 4096
 ```
-
 输出(节选):
-
 ```
 Section: Scheduler Statistics
 ---------------------------- ----------- ------------
@@ -126,13 +121,10 @@ OPT   ... each warp spends 20.3 cycles being stalled waiting for a scoreboard
       This stall type represents about 62.6% of the total average of 32.4
       cycles between issuing two instructions.
 ```
-
 **判读**:
-
 - `Issued Warp Per Scheduler = 0.11`:发射槽 89% 时间空转
 - `Active Warps Per Scheduler = 3.52 / 16`:**常驻 warp 太少(occupancy 低)**
 - 32.4 拍/指令中 **20.3 拍(62.6%)是 `long_scoreboard`** —— 等 **L1TEX / 全局内存** 数据
-
 **翻译**:每个 warp 大量时间在等 global load 的数百拍延迟,而 SM 里常驻 warp 又太少,
 没有别的 warp 能利用这些空拍。**延迟高 × 掩盖延迟的 warp 少**,两个问题互相放大。
 
