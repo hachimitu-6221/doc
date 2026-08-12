@@ -83,12 +83,12 @@ OPT   This workload exhibits low compute throughput and memory bandwidth
 | 高 (>60%) | 低 | compute bound | ComputeWorkloadAnalysis 看哪条 pipe |
 | 低 | 高 (>60%) | memory bound | MemoryWorkloadAnalysis 看哪级缓存 |
 | **低** | **低** | **latency bound(warp 在干等)** | **SchedulerStats + WarpStateStats** |
-造成上述情况的可能有以下几种情况：
+**造成上述情况的可能有以下几种情况：**
 1. **Kernel 太小 / 并行度不够**：启动的 block 或线程太少，填不满整张卡的 SM。比如 grid 只有几十个 block，而显卡有上百个 SM，大部分 SM 根本没活干。
 2. **延迟受限（latency-bound）**：每个线程的工作量太小、依赖链太长、或者频繁同步（`__syncthreads`），线程一直在"等"而不是"算"。
 3. **Occupancy 太低**：寄存器/shared memory 用太多，每个 SM 上同时驻留的 warp 太少，没有足够的 warp 来隐藏访存和指令延迟。
 4. **Kernel 执行时间太短**：如果 kernel 只跑几微秒，启动开销（launch overhead）占比很大，利用率自然难看。可以在 ncu 的 Summary 里看 kernel 的实际执行时长。
-排查方向：
+**排查方向**：
 5. **看 Occupancy 部分**（Theoretical vs Achieved Occupancy）：如果 Achieved Occupancy 远低于 Theoretical，说明活跃 warp 不够；如果 Theoretical 本身就低，查寄存器/shared memory 用量。 
 6. **看 Launch Statistics**：确认 grid size / block size，计算 `grid × block / (SM数 × 2048)`，看能不能填满显卡。
 7. **看 Warp State Statistics**：看 warp 主要 stall 在什么上——`Stall Long Scoreboard`（等访存）、`Stall Wait / Short Scoreboard`（等依赖）、`Stall Barrier`（等同步）能直接告诉你延迟卡在哪。
@@ -122,39 +122,40 @@ OPT   ... each warp spends 20.3 cycles being stalled waiting for a scoreboard
       cycles between issuing two instructions.
 ```
 **判读**:
+- Warp Cycles Per Issued Instruction = 32.45：每个 warp 平均要等 32 个周期才能发出下一条指令。
+- 其中 **62.6%（约 20.3 拍）是 Long Scoreboard 等待**：这是"等 L1TEX（全局/局部/纹理内存）数据返回"的停顿。L1 miss 后要等 L2 甚至 DRAM 的数据，一趟要几百拍。
 - `Issued Warp Per Scheduler = 0.11`:发射槽 89% 时间空转
 - `Active Warps Per Scheduler = 3.52 / 16`:**常驻 warp 太少(occupancy 低)**
 - 32.4 拍/指令中 **20.3 拍(62.6%)是 `long_scoreboard`** —— 等 **L1TEX / 全局内存** 数据
-**翻译**:每个 warp 大量时间在等 global load 的数百拍延迟,而 SM 里常驻 warp 又太少,
+**翻译**:每个 warp 大量时间在等 global load 的数百拍延迟,而 SM 里==常驻 warp 又太少==,
 没有别的 warp 能利用这些空拍。**延迟高 × 掩盖延迟的 warp 少**,两个问题互相放大。
 
+```plain
+occupancy 低（每调度器只有 3.52 个 warp）
+   → 访存指令发出后，没有足够多的其他 warp 可以切换上来干活
+   → 调度器只能干等内存返回（89% 周期空转）
+   → SM 利用率 10%，DRAM 带宽也压不上去
+```
 对照代码想原因:kernel1 的 `tileMemcpy`(gmem→smem)是**标量同步拷贝**——
 每条 `LDG`(2 字节)紧跟一条依赖它的 `STS`,warp 只能干等,没有任何 overlap。
 
-常见 stall 原因速查:
-
-| stall 类型 | 含义 | 典型对策 |
-|---|---|---|
-| `long_scoreboard` | 等 global/local 内存数据 | 增大在途 load 数、向量化、cp.async、提高 occupancy |
-| `short_scoreboard` | 等 shared 内存数据 | 消除 bank conflict、双缓冲 fragment |
-| `barrier` | 等 `__syncthreads()` | 减少同步次数、warp specialization、mbarrier |
-| `mio_throttle` | MIO 队列满(LDS/LDSM 太密) | 减少 smem 指令数、错开发射 |
-| `math_pipe_throttle` | 算数 pipe 饱和 | 接近极限,换更大的 mma/减少非 mma 指令 |
-| `wait` | 固定延迟的寄存器依赖 | 增加 ILP、让编译器更好调度 |
-| `not_selected` | 有空但未被选中(正常现象) | 无需处理 |
-
+**常驻 warp 太少的排查方向**
+- **Launch 配置本身太小**：看 ncu 的 Launch Statistics——grid × block 总共多少线程？如果你的显卡有 100+ 个 SM（每 SM 4 个调度器），要填满需要 `调度器数 × 16 warp`，也就是大几万个线程。grid 只有几百个 block 肯定不够。**这是最常见的原因。**
+- **寄存器用量过高**：看 Occupancy 部分的 Theoretical Occupancy 和 Registers Per Thread。如果每线程用了 128+ 个寄存器，一个 SM 驻留不了几个 block。可以用 `__launch_bounds__` 或编译选项 `-maxrregcount` 限制（代价是可能 spill）。
+- **Shared memory 用量过高**：每 block 申请的 shared memory 太大也会限制驻留 block 数。
+- **Block size 太小**：比如 block 只有 32/64 线程，SM 的 block 槽位（一般 32 个）先被占满，warp 数上不去。一般 128~256 线程/block 比较合适。
+**减少等待本身的排查方向**
+- **检查访存是否合并（coalesced）**：看 Memory Workload Analysis 里 L1/L2 的 sector 命中率。如果相邻线程访问的地址不连续，一个 warp 的访存会被拆成很多笔事务，延迟和次数都暴涨。
+- **增加每个线程的 ILP**：让一个线程做多个独立的访存/计算（比如一次处理 2~4 个元素），单个 warp 内部也有更多可并行的指令，不那么依赖 warp 数量来藏延迟。
+- **数据能否搬进 shared memory**：如果有复用，先合并地读进 shared memory 再计算。
 ---
-
 ## 第 3 步:Occupancy —— 谁限制了常驻 warp 数?
-
 ```bash
 ncu --kernel-name "regex:kernel_1" --launch-count 1 \
     --section Occupancy --section LaunchStats \
     ./build/runner 1 1 4096 4096 4096
 ```
-
 输出(节选):
-
 ```
 Section: Launch Statistics
 -------------------------------- --------------- ---------------
@@ -179,23 +180,18 @@ Theoretical Occupancy                     %           25
 Achieved Occupancy                        %        22.01
 Achieved Active Warps Per SM           warp        14.08
 ```
-
 **判读**:
-
 - "Block Limit" 一行是排除法:取各资源的最小值 → 每 SM 只能驻 **2 个 CTA**(16 warp)
   - 寄存器:106 regs/thread × 256 thread × 2 ≈ 54K,贴近 64K/SM 上限
   - smem:50KB/CTA × 2 = 100KB,贴近 102.4KB 配置
 - Theoretical Occupancy 25%,Achieved 22% —— 正是第 2 步 `3.52 warp/scheduler` 的来源
 - 次要问题:`Waves Per SM = 2.37`,最后一波只装满 37%,有尾部浪费(grid 最好整除波数)
-
 > **注意**:对大 tile GEMM,低 occupancy 本身不是罪(高性能 GEMM 常只有 2 CTA/SM),
 > 关键是**有没有别的手段在少数 warp 内掩盖延迟**(ILP、cp.async、多级流水、双缓冲)。
 > kernel1 的问题是这些手段一个都没有。
 
 ---
-
 ## 第 4 步:Memory Workload —— 量化访存效率
-
 ```bash
 ncu --kernel-name "regex:kernel_1" --launch-count 1 \
     --section MemoryWorkloadAnalysis \
@@ -335,17 +331,13 @@ total samples: 551603
    `ncu --import report.ncu-rep` 或 GUI (`ncu-ui`) 随时翻看,不用重跑。
 6. **开销**:profile 会让 kernel 慢数倍(metric replay 多遍执行),不要在 profile 时测性能数字。
 7. 可用 section 列表:`ncu --list-sections`;可用 metric 查询:`ncu --query-metrics | grep bank`。
-
 ## 验证闭环(下一步练习)
-
 对 kernel2 跑同样流程,检验"向量化拷贝"假设:
-
 ```bash
 ./build/runner 2 10 4096 4096 4096            # GFLOPS 涨了多少?
 ncu --kernel-name "regex:kernel_2" --launch-count 1 \
     --section SpeedOfLight --section WarpStateStats \
     ./build/runner 2 1 4096 4096 4096         # long_sb 是否下降?Compute% 涨了多少?
 ```
-
 预期:两条 `STS.U16` 的 long_sb stall 基本消失,Compute (SM) Throughput 显著上升,
 瓶颈转移到下一处(通常是 barrier 或 smem bank conflict)——然后重复本流程,逐代分析。
