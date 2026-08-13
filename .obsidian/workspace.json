@@ -200,14 +200,22 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "8fb752a724bc9b98",
+  "active": "548e273ec721ac60",
   "lastOpenFiles": [
+    "FlashAttention/Amper/app/tilememcpy.html",
+    "FlashAttention/Amper/app/part8.html",
+    "FlashAttention/Amper/app/part7.html",
+    "FlashAttention/Amper/app/part6.html",
+    "FlashAttention/Amper/app/part5.html",
+    "FlashAttention/Amper/app/part4.html",
+    "FlashAttention/Amper/app/part3.html",
+    "FlashAttention/Amper/app/part2.html",
+    "FlashAttention/Amper/app/index.html",
+    "FlashAttention/Amper/app",
+    "FlashAttention/Amper/FlashAttention从零开始-第8部分-中文翻译.html",
     "GEMM/GEMM.md",
     "未命名.canvas",
     "GEMM/ncu 分析 kernel1 性能.md",
-    "FlashAttention",
-    "GEMM",
-    "未命名.base",
     "2026-08-11.md"
   ]
 }

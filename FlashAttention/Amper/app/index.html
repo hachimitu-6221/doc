@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flash Attention from Scratch 中文翻译</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", "Noto Sans SC", sans-serif; background:#f8f9fb; color:#1f2328; margin:0; }
+  main { max-width: 46rem; margin: 3rem auto; padding: 0 1.25rem; }
+  h1 { font-size: 1.6rem; border-bottom: 2px solid #e1e4e8; padding-bottom: .5rem; }
+  p.sub { color:#586069; }
+  ol { line-height: 2.1; font-size: 1.05rem; }
+  a { color:#0366d6; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  .note { background:#fff3cd; border:1px solid #ffc107; border-radius:6px; padding:.6rem 1rem; font-size:.9rem; color:#664d03; margin-top:1.5rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Flash Attention from Scratch（中文翻译）</h1>
+  <p class="sub">原文：<a href="https://lubits.ch/flash/">lubits.ch/flash</a>（Sonny's Blog）。以下为 Part 2–8 的中文版，排版、公式与插图均保留原样，单文件可离线打开。</p>
+  <ol start="2">
+    <li><a href="part2.html">Part 2：Tensor Core 与内存指令（mma / ldmatrix / cp.async）</a></li>
+    <li><a href="part3.html">Part 3：Kernel 1——基础实现</a></li>
+    <li><a href="part4.html">Part 4：Bank Conflicts &amp; Swizzling（Kernel 2）</a></li>
+    <li><a href="part5.html">Part 5：Cutlass GEMM 优化（Kernel 3–5）</a></li>
+    <li><a href="part6.html">Part 6：FP 指令融合与 Auto-Tuning（Kernel 6–7）</a></li>
+    <li><a href="part7.html">Part 7：A100 Profiling 分析</a></li>
+    <li><a href="part8.html">Part 8：指令削减（Kernel 8–11）</a></li>
+  </ol>
+  <div class="note">AI 辅助翻译，技术术语保留英文原文。另有早前做的 <a href="tilememcpy.html">tileMemcpy 交互讲解页</a>。</div>
+</main>
+</body>
+</html>
