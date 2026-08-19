@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEMM/GEMM.md",
+                "file": "pypto/passes/ADD/01expandFunction.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "GEMM"
+              "title": "01expandFunction"
             }
           }
         ]
@@ -203,8 +203,8 @@
   },
   "active": "8fb752a724bc9b98",
   "lastOpenFiles": [
-    "GEMM/ncu 分析 kernel1 性能.md",
     "GEMM/GEMM.md",
+    "GEMM/ncu 分析 kernel1 性能.md",
     "pypto/passes/ADD/01expandFunction.md",
     "pypto/passes/ADD/02_MergeViewAssemble.md",
     "pypto/未命名.md",
