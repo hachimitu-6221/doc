@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "pypto/passes/ADD/02_MergeViewAssemble.md",
+                "file": "GEMM/GEMM.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "02_MergeViewAssemble"
+              "title": "GEMM"
             }
           }
         ]
@@ -201,7 +201,7 @@
       "obsidian-importer:导入笔记": false
     }
   },
-  "active": "548e273ec721ac60",
+  "active": "8fb752a724bc9b98",
   "lastOpenFiles": [
     "pypto/passes/ADD/01expandFunction.md",
     "pypto/passes/ADD/02_MergeViewAssemble.md",
