@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "pypto/expandFunction.md",
+                "file": "pypto/未命名.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "expandFunction"
+              "title": "未命名"
             }
           }
         ]
@@ -83,7 +83,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "7c083ff4b03fc5b5",
@@ -203,8 +204,8 @@
   },
   "active": "8fb752a724bc9b98",
   "lastOpenFiles": [
-    "pypto/未命名.md",
     "pypto/expandFunction.md",
+    "pypto/未命名.md",
     "ptx/常见PTX.md",
     "pypto",
     "FlashAttention/Amper/FlashAttention从零开始-第2部分-中文翻译.html",
