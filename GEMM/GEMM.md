@@ -23,7 +23,7 @@
 	  extern __shared__ half shmem[];
 	  half* A_block_smem = shmem;
 	  half* B_block_smem = &shmem[BM_dim * BK_dim];
-	  // 方式2
+	  // 方式2 锁死上限48KB
 	  __shared__ half A_block_smem[BM_dim][BK_dim];
 	  __shared__ half B_block_smem[BK_dim][BN_dim];
 ```

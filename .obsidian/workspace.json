@@ -203,6 +203,8 @@
   },
   "active": "8fb752a724bc9b98",
   "lastOpenFiles": [
+    "GEMM/ncu 分析 kernel1 性能.md",
+    "GEMM/GEMM.md",
     "pypto/passes/ADD/01expandFunction.md",
     "pypto/passes/ADD/02_MergeViewAssemble.md",
     "pypto/未命名.md",
@@ -218,7 +220,6 @@
     "HTML import/FlashAttention从零开始-第5部分-中文翻译.md",
     "HTML import/FlashAttention从零开始-第7部分-中文翻译.md",
     "HTML import/FlashAttention从零开始-第8部分-中文翻译.md",
-    "GEMM/ncu 分析 kernel1 性能.md",
     "HTML import/FlashAttention从零开始-第6部分-中文翻译.md",
     "HTML import/tilememcpy.md",
     "HTML import/part8.md",
@@ -234,7 +235,6 @@
     "FlashAttention/Amper/app/part8.html",
     "FlashAttention/Amper/app/part7.html",
     "FlashAttention/Amper/app/part6.html",
-    "GEMM/GEMM.md",
     "未命名.canvas",
     "2026-08-11.md"
   ]
