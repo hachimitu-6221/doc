@@ -62,4 +62,5 @@ if (elect_one_thread) {
 | TMEM 分配/释放                       | warp 0 整体（32 线程，warp 级指令） | TMEM 硬件                                                                        |
 | epilogue：TMEM→寄存器→转 bf16→写回 GMEM | —                         | **全部 128 线程**（`tcgen05.ld` 是 warp 协作指令，4 个 warp 各读 16 条 lane；转换和写回也是每线程各写自己那份） |
 ![[Pasted image 20260828193003.png]]
+![[Pasted image 20260828225714.png]]
 ![[Pasted image 20260828163226.png]]

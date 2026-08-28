@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "GEMM/GEMM.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
@@ -203,6 +203,7 @@
   },
   "active": "8fb752a724bc9b98",
   "lastOpenFiles": [
+    "Pasted image 20260828225714.png",
     "Pasted image 20260828193003.png",
     "Pasted image 20260828163226.png",
     "ptx/常见PTX.md",
