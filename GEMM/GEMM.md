@@ -34,5 +34,22 @@
 5. `__syncthreads()`只做块内同步，在块内准备工作做好即将进入更细分的`warp_tile`中间得插入这条同步指令。在每个块的循环结束的末尾得插入这条指令是为了？
 6. 在最底层对一个fragment做矩阵乘的时候用的是内积转外积的方式，只要保证mma_k在最外层，mma_m和mma_n的顺序暂时不用考虑，谁在最里面都行。
 
+- step1 初始化屏障
+```c++
+if (elect_one_thread) {
+    mbar_init(tma_mbar_int, 1);
+    mbar_init(mma_mbar_int, 1);
+    fence_mbar_init();
+}
+```
+`fence`前两行由同步协议完成，加上`fence`后使得走异步协议也能读取到正确的初始化后的`tma_mbar_int/mma_mbar_int`。
+
+| 内部字段     | init 后的值     | 含义                                               |
+| -------- | ------------ | ------------------------------------------------ |
+| 相位 bit   | **0**        | 整个 parity 协议的起点（所以线程的 `tma_phase` 也从 0 开始，两边对得上） |
+| 预期到达计数   | **1**（第二个参数） | 每个相位需要 1 次"签到"才算完成                               |
+| tx-count | 0            | 暂时没有预期的字节                                        |
+
+之后的逻辑就是等声明的tma_phase/mma_phase变化到和内置的phase相等之后自动翻转内置phase然后结束wait
 
 ![[Pasted image 20260828163226.png]]
