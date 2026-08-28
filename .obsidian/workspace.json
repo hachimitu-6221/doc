@@ -83,7 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 256.70001220703125
+    "width": 371.8999938964844
   },
   "right": {
     "id": "7c083ff4b03fc5b5",
@@ -203,6 +203,7 @@
   },
   "active": "8fb752a724bc9b98",
   "lastOpenFiles": [
+    "Pasted image 20260828163226.png",
     "ptx/常见PTX.md",
     "pypto/passes/ADD/02_MergeViewAssemble.md",
     "pypto/passes/ADD/01expandFunction.md",
