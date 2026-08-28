@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "pypto/passes/ADD/02_MergeViewAssemble.md",
+                "file": "GEMM/GEMM.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "02_MergeViewAssemble"
+              "title": "GEMM"
             }
           }
         ]
@@ -203,14 +203,14 @@
   },
   "active": "8fb752a724bc9b98",
   "lastOpenFiles": [
-    "pypto/passes/ADD/01expandFunction.md",
+    "ptx/常见PTX.md",
     "pypto/passes/ADD/02_MergeViewAssemble.md",
+    "pypto/passes/ADD/01expandFunction.md",
     "GEMM/GEMM.md",
     "GEMM/ncu 分析 kernel1 性能.md",
     "pypto/未命名.md",
     "pypto/passes/ADD",
     "pypto/passes",
-    "ptx/常见PTX.md",
     "pypto",
     "FlashAttention/Amper/FlashAttention从零开始-第2部分-中文翻译.html",
     "ptx",
