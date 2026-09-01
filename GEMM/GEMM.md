@@ -47,6 +47,7 @@
 | stmatrix → SMEM（输出 tile） | **BF16**             | 打包成核心矩阵布局             |
 | TMA store → GMEM（输出 C）   | **BF16**             | 原样搬运                  |
 
+- 数据在gmem被切成一个一个小块后由负责搬运数据的线程/tma把数据塞到smem中, 在hopper之前由ldmatrix将数据以tensor core友好的方式塞进寄存器中; hopper及其之后的架构则是将数据直接送给tensor core处理(自动整理成tensor core友好的布局)
 
 - step1 初始化屏障
 ```c++
