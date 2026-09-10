@@ -14,9 +14,36 @@
  → 通过了才执行，结果再喂回给模型
 ```
 
-|层次|问题|典型失败|
-|---|---|---|
-|Selection|选对了工具吗|漏调/多调|
-|Arguments|参数值对吗|字段/值错误|
-|Trajectory|顺序对吗|依赖关系错|
-|Task|目标达成了吗|看似合理的错误答案|
+| 层次         | 问题     | 典型失败      |
+| ---------- | ------ | --------- |
+| Selection  | 选对了工具吗 | 漏调/多调     |
+| Arguments  | 参数值对吗  | 字段/值错误    |
+| Trajectory | 顺序对吗   | 依赖关系错     |
+| Task       | 目标达成了吗 | 看似合理的错误答案 |
+
+- prompt be like, 即为`list[dict[str, Any]]`
+```
+[
+    # 1. 常驻指令（你是谁、规则、环境信息、技能目录）—— TODO 1.1.b 构造
+    {"role": "system", "content": "You are a coding agent... <system_information>{...}</system_information>..."},
+
+    # 2. 任务说明（这次要干什么）—— 也是 1.1.b
+    {"role": "user", "content "print hello, world to the terminal"},
+
+    # 3. 第 1 步：模型自己说的话（原样保留，含 tool_calls 字段）
+    {"role": "assistant", "content": "Calling execute.",
+     "_calls": [{"id": "call_1", "type": "function",
+                     "function": {"name": "execute", "arguments": '{"command": "ls -la"}'}}]},
+
+    # 4. 第 1 步的工具结果，role 是 tool，用 tool_call_id 指回上面那个调用
+    {"role": "tool", "tool_call_id": "call_1",
+     "content": "<output>total 4\ndrwxr-xr-x 2 root root ...output>\n<returncode>0</returncode>"},
+
+    # 5. 第 2 步的 assistant 消息
+    {"role": "assistant", "content": "Calling execute.",
+     "tool_calls": [{"id": "call2", ..., "function": {"name": "execute", "arguments": '{"command": "cat <<EOF..."}'}}]},
+
+    # 6. 第 2 步的工具结果
+    {"role": "tool", "tool_call_id": "call_2", "content": "<output></output>\n<returncode>0</returncode>"},
+]
+```
