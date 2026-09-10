@@ -14,7 +14,7 @@
               "type": "markdown",
               "state": {
                 "file": "agent/cmu_11768_agent.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
@@ -83,7 +83,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 371.8999938964844
+    "width": 371.8999938964844,
+    "collapsed": true
   },
   "right": {
     "id": "7c083ff4b03fc5b5",
