@@ -83,8 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 371.8999938964844,
-    "collapsed": true
+    "width": 371.8999938964844
   },
   "right": {
     "id": "7c083ff4b03fc5b5",
@@ -202,8 +201,9 @@
       "obsidian-importer:导入笔记": false
     }
   },
-  "active": "8fb752a724bc9b98",
+  "active": "548e273ec721ac60",
   "lastOpenFiles": [
+    "agent",
     "Pasted image 20260829195031.png",
     "Pasted image 20260829180354.png",
     "Pasted image 20260828225714.png",
