@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/ai-agent-from-scratch/docs/ch02-llm-api-basics.md",
+                "file": "agent/from scratch book.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "ch02-llm-api-basics"
+              "title": "from scratch book"
             }
           }
         ]
@@ -83,8 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 243.10000610351562,
-    "collapsed": true
+    "width": 243.10000610351562
   },
   "right": {
     "id": "7c083ff4b03fc5b5",
@@ -205,6 +204,8 @@
   "active": "8fb752a724bc9b98",
   "lastOpenFiles": [
     "agent/cmu_11768_agent.md",
+    "agent/from scratch book.md",
+    "docs/ai-agent-from-scratch/docs/ch02-llm-api-basics.md",
     "docs/ai-agent-from-scratch/uv.lock",
     "docs/ai-agent-from-scratch/tests/test_regressions.py",
     "docs/ai-agent-from-scratch/tests/test_notebooks.py",
@@ -243,7 +244,6 @@
     "HTML import/part3.md",
     "HTML import/part2.md",
     "HTML import/index.md",
-    "未命名.canvas",
-    "2026-08-11.md"
+    "未命名.canvas"
   ]
 }
