@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "agent/from scratch book.md",
+                "file": "agent/python.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "from scratch book"
+              "title": "python"
             }
           }
         ]
@@ -204,7 +204,10 @@
   "active": "8fb752a724bc9b98",
   "lastOpenFiles": [
     "agent/cmu_11768_agent.md",
+    "agent/python.md",
     "agent/from scratch book.md",
+    "python/未命名.md",
+    "python",
     "docs/ai-agent-from-scratch/docs/ch02-llm-api-basics.md",
     "docs/ai-agent-from-scratch/uv.lock",
     "docs/ai-agent-from-scratch/tests/test_regressions.py",
@@ -215,7 +218,6 @@
     "docs/ai-agent-from-scratch/scratch_agents/workflows/sequential.py",
     "docs/ai-agent-from-scratch/scratch_agents/workflows/parallel.py",
     "docs/ai-agent-from-scratch/scratch_agents/workflows/loop.py",
-    "docs/ai-agent-from-scratch/scratch_agents/tools/__init__.py",
     "docs/ai-agent-from-scratch/README.md",
     "GEMM/GEMM.md",
     "Pasted image 20260829195031.png",
@@ -242,8 +244,6 @@
     "HTML import/part5.md",
     "HTML import/part4.md",
     "HTML import/part3.md",
-    "HTML import/part2.md",
-    "HTML import/index.md",
     "未命名.canvas"
   ]
 }
