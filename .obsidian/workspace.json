@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEMM/GEMM.md",
-                "mode": "preview",
+                "file": "agent/from scratch book.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "GEMM"
+              "title": "from scratch book"
             }
           }
         ]
@@ -203,14 +203,19 @@
   },
   "active": "aa19c7f09f3ab276",
   "lastOpenFiles": [
-    "GEMM/ncu 分析 kernel1 性能.md",
+    "docs/ai-agent-from-scratch/docs/ch06-memory-systems.md",
+    "docs/ai-agent-from-scratch/docs/ch07-planning-and-reflection.md",
+    "docs/ai-agent-from-scratch/docs/ch05-rag-and-file-tools.md",
+    "docs/ai-agent-from-scratch/docs/ch04-react-agent.md",
+    "docs/ai-agent-from-scratch/docs/ch03-tool-use.md",
+    "docs/ai-agent-from-scratch/docs/ch02-llm-api-basics.md",
     "GEMM/GEMM.md",
+    "GEMM/ncu 分析 kernel1 性能.md",
     "agent/python.md",
     "agent/cmu_11768_agent.md",
     "agent/from scratch book.md",
     "python/未命名.md",
     "python",
-    "docs/ai-agent-from-scratch/docs/ch02-llm-api-basics.md",
     "docs/ai-agent-from-scratch/uv.lock",
     "docs/ai-agent-from-scratch/tests/test_regressions.py",
     "docs/ai-agent-from-scratch/tests/test_notebooks.py",
@@ -239,11 +244,6 @@
     "HTML import/FlashAttention从零开始-第6部分-中文翻译.md",
     "HTML import/tilememcpy.md",
     "HTML import/part8.md",
-    "HTML import/part7.md",
-    "HTML import/part6.md",
-    "HTML import/part5.md",
-    "HTML import/part4.md",
-    "HTML import/part3.md",
     "未命名.canvas"
   ]
 }
