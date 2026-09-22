@@ -103,22 +103,22 @@ tcgen05.dealloc        真正释放 TMEM（kernel 退出前必须显式调用）
 
 ***不是在 shared memory 分配东西**，而是：
 
-> 分配 512 columns 的 Tensor Memory，并把得到的 TMEM 地址****写入**** shared memory `[allocation_address]`。
+> 分配 512 columns 的 Tensor Memory，并把得到的 TMEM 地址**写入*** shared memory `[allocation_address]`。
 
 所以后续代码从 SMEM 读出的就是硬件写入的 TMEM base address：
 
-const uint32_t tmem = *reinterpret_cast<uint32_t*>(shared + A_BYTES + B_BYTES + 16);
+`const uint32_t tmem = *reinterpret_cast<uint32_t*>(shared + A_BYTES + B_BYTES + 16);`
 
 修饰符含义：
 
-|   |   |
-|---|---|
-|修饰符|含义|
-|`.cta_group::1`|TMEM 属于单个 CTA（另有 `::2` 支持双 CTA 协同）|
-|`.sync`|warp 内线程同步执行|
-|`.aligned`|整个 warp 一致执行|
+|                 |                                    |
+| --------------- | ---------------------------------- |
+| 修饰符             | 含义                                 |
+| `.cta_group::1` | TMEM 属于单个 CTA（另有 `::2` 支持双 CTA 协同） |
+| `.sync`         | warp 内线程同步执行                       |
+| `.aligned`      | 整个 warp 一致执行                       |
 
-⚠️ 它是 ****warp collective**** 操作，必须由整个 warp 执行：
+⚠️ 它是 ***warp collective** 操作，必须由整个 warp 执行：
 
 if (warp == 0) { tcgen05.alloc... }   // ✅ warp 0 全部 32 线程  
 // if (threadIdx.x == 0)              // ❌ 只让 thread 0 执行是错误的
@@ -129,14 +129,14 @@ if (warp == 0) { tcgen05.alloc... }   // ✅ warp 0 全部 32 线程
 
 本代码最重要的 data-movement 指令，逐段拆解：
 
-|   |   |
-|---|---|
-|片段|含义|
-|`cp.async`|异步拷贝，发出后线程不等数据搬完|
-|`.bulk.tensor`|通过 `CUtensorMap`（base address / dims / strides / tile shape / swizzle / OOB 行为）由硬件计算地址并搬运|
-|`.3d`|tensor map 是三维的，坐标 `{0, row, reduction_tile}` 是 3D tensor coordinate|
-|`.shared::cluster` `.global`|****dst 在前，src 在后****：`global → shared`（方向与直觉相反，按 `.dst .src` 读）|
-|`.mbarrier::complete_tx::bytes`|完成时对指定 mbarrier 执行 `complete_tx`，完成量 = 实际搬运的****字节数****|
+|                                 |                                                                                           |
+| ------------------------------- | ----------------------------------------------------------------------------------------- |
+| 片段                              | 含义                                                                                        |
+| `cp.async`                      | 异步拷贝，发出后线程不等数据搬完                                                                          |
+| `.bulk.tensor`                  | 通过 `CUtensorMap`（base address / dims / strides / tile shape / swizzle / OOB 行为）由硬件计算地址并搬运 |
+| `.3d`                           | tensor map 是三维的，坐标 `{0, row, reduction_tile}` 是 3D tensor coordinate                      |
+| `.shared::cluster` `.global`    | ****dst 在前，src 在后****：`global → shared`（方向与直觉相反，按 `.dst .src` 读）                          |
+| `.mbarrier::complete_tx::bytes` | 完成时对指定 mbarrier 执行 `complete_tx`，完成量 = 实际搬运的****字节数****                                   |
 
 ### 3.2 `mbarrier.arrive.expect_tx` —— 完整逻辑推演
 
