@@ -1,0 +1,217 @@
+{
+  "modal_run": "https://modal.com/apps/akseven6221/main/ap-bhPylXitx93c85S6fzehNc",
+  "method": "Sequential variants on the same B200; clocks not locked; results are diagnostic, not final benchmark claims",
+  "cases": {
+    "baseline": {
+      "source_sha256": "0655f0efa8e3715a6371830c2197a882736122e7d1d8d89a8c3c704472a10d2e",
+      "build": "ptxas info    : 0 bytes gmem\nptxas info    : Compiling entry function '_ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i' for 'sm_100a'\nptxas info    : Function properties for _ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i\n    16 bytes stack frame, 16 bytes spill stores, 20 bytes spill loads\nptxas info    : Used 40 registers, used 3 barriers, 16 bytes cumulative stack size\nptxas info    : Compile time = 72.578 ms\n",
+      "result": {
+        "gpu": "NVIDIA B200",
+        "sms": 148,
+        "cuda_runtime": 12080,
+        "driver": 13000,
+        "cublas_version": 120804,
+        "m": 4096,
+        "n": 4096,
+        "k": 4096,
+        "warmup": 100,
+        "iterations": 100,
+        "rounds": 7,
+        "custom_ms": 0.342217892,
+        "cublas_ms": 0.089169599,
+        "custom_tflops": 401.612413,
+        "cublas_tflops": 1541.320751,
+        "throughput_percent": 26.056381,
+        "max_abs_error": 0,
+        "relative_l2": 0,
+        "custom_ms_samples": [
+          0.340048343,
+          0.362977296,
+          0.356467515,
+          0.342298895,
+          0.341562569,
+          0.342217892,
+          0.341970861
+        ],
+        "cublas_ms_samples": [
+          0.089347839,
+          0.089084797,
+          0.089144967,
+          0.088633277,
+          0.089678399,
+          0.089169599,
+          0.089616954
+        ]
+      }
+    },
+    "cta_release": {
+      "source_sha256": "2bdf217f62a01850518f0613181957d6662dedc1c17ec9650e5e58d220cede48",
+      "build": "ptxas info    : 0 bytes gmem\nptxas info    : Compiling entry function '_ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i' for 'sm_100a'\nptxas info    : Function properties for _ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i\n    16 bytes stack frame, 16 bytes spill stores, 20 bytes spill loads\nptxas info    : Used 40 registers, used 3 barriers, 16 bytes cumulative stack size\nptxas info    : Compile time = 70.630 ms\n",
+      "result": {
+        "gpu": "NVIDIA B200",
+        "sms": 148,
+        "cuda_runtime": 12080,
+        "driver": 13000,
+        "cublas_version": 120804,
+        "m": 4096,
+        "n": 4096,
+        "k": 4096,
+        "warmup": 100,
+        "iterations": 100,
+        "rounds": 7,
+        "custom_ms": 0.120411843,
+        "cublas_ms": 0.10162048,
+        "custom_tflops": 1141.407273,
+        "cublas_tflops": 1352.472975,
+        "throughput_percent": 84.394091,
+        "max_abs_error": 0,
+        "relative_l2": 0,
+        "custom_ms_samples": [
+          0.105055362,
+          0.105947837,
+          0.121130235,
+          0.121678397,
+          0.121446721,
+          0.120411843,
+          0.119339198
+        ],
+        "cublas_ms_samples": [
+          0.08861696,
+          0.088632002,
+          0.101889916,
+          0.101990081,
+          0.101758718,
+          0.10162048,
+          0.09944544
+        ]
+      }
+    },
+    "relaxed": {
+      "source_sha256": "a24d14d51f68d4257406571157ec91bfe2fb8211adae635123b49af6c11d98c9",
+      "build": "ptxas info    : 0 bytes gmem\nptxas info    : Compiling entry function '_ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i' for 'sm_100a'\nptxas info    : Function properties for _ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i\n    16 bytes stack frame, 16 bytes spill stores, 20 bytes spill loads\nptxas info    : Used 40 registers, used 3 barriers, 16 bytes cumulative stack size\nptxas info    : Compile time = 71.559 ms\n",
+      "result": {
+        "gpu": "NVIDIA B200",
+        "sms": 148,
+        "cuda_runtime": 12080,
+        "driver": 13000,
+        "cublas_version": 120804,
+        "m": 4096,
+        "n": 4096,
+        "k": 4096,
+        "warmup": 100,
+        "iterations": 100,
+        "rounds": 7,
+        "custom_ms": 0.118100792,
+        "cublas_ms": 0.098418236,
+        "custom_tflops": 1163.742859,
+        "cublas_tflops": 1396.478533,
+        "throughput_percent": 83.334103,
+        "max_abs_error": 0,
+        "relative_l2": 0,
+        "custom_ms_samples": [
+          0.103855677,
+          0.106098242,
+          0.11803776,
+          0.118100792,
+          0.121581443,
+          0.123013124,
+          0.121785916
+        ],
+        "cublas_ms_samples": [
+          0.088494718,
+          0.0885088,
+          0.098317757,
+          0.098418236,
+          0.102007359,
+          0.102047995,
+          0.099490881
+        ]
+      }
+    },
+    "elect_cta": {
+      "source_sha256": "74d0f108f991c498f8ab93937a476f581f811a74ccac9e00ece119776a5c397e",
+      "build": "ptxas info    : 0 bytes gmem\nptxas info    : Compiling entry function '_ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i' for 'sm_100a'\nptxas info    : Function properties for _ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i\n    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads\nptxas info    : Used 49 registers, used 3 barriers\nptxas info    : Compile time = 75.282 ms\n",
+      "result": {
+        "gpu": "NVIDIA B200",
+        "sms": 148,
+        "cuda_runtime": 12080,
+        "driver": 13000,
+        "cublas_version": 120804,
+        "m": 4096,
+        "n": 4096,
+        "k": 4096,
+        "warmup": 100,
+        "iterations": 100,
+        "rounds": 7,
+        "custom_ms": 0.093306884,
+        "cublas_ms": 0.103643522,
+        "custom_tflops": 1472.977634,
+        "cublas_tflops": 1326.07375,
+        "throughput_percent": 111.078108,
+        "max_abs_error": 0,
+        "relative_l2": 0,
+        "custom_ms_samples": [
+          0.089902714,
+          0.093978554,
+          0.093182079,
+          0.093306884,
+          0.093062073,
+          0.10228736,
+          0.101924799
+        ],
+        "cublas_ms_samples": [
+          0.088800639,
+          0.088672638,
+          0.103360318,
+          0.103643522,
+          0.111067839,
+          0.116018236,
+          0.115779839
+        ]
+      }
+    },
+    "elect_cta2d": {
+      "source_sha256": "3f6616ab155edd813ba6b8f3bd9b0fb70bdc00df5e0a53218322caed5b9bc0d8",
+      "build": "ptxas info    : 0 bytes gmem\nptxas info    : Compiling entry function '_ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i' for 'sm_100a'\nptxas info    : Function properties for _ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i\n    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads\nptxas info    : Used 49 registers, used 3 barriers\nptxas info    : Compile time = 72.460 ms\n",
+      "result": {
+        "gpu": "NVIDIA B200",
+        "sms": 148,
+        "cuda_runtime": 12080,
+        "driver": 13000,
+        "cublas_version": 120804,
+        "m": 4096,
+        "n": 4096,
+        "k": 4096,
+        "warmup": 100,
+        "iterations": 100,
+        "rounds": 7,
+        "custom_ms": 0.094166405,
+        "cublas_ms": 0.105031684,
+        "custom_tflops": 1459.532757,
+        "cublas_tflops": 1308.547556,
+        "throughput_percent": 111.538381,
+        "max_abs_error": 0,
+        "relative_l2": 0,
+        "custom_ms_samples": [
+          0.089048646,
+          0.089369275,
+          0.091910727,
+          0.094326399,
+          0.094166405,
+          0.098712645,
+          0.098384
+        ],
+        "cublas_ms_samples": [
+          0.088962883,
+          0.088978246,
+          0.105010882,
+          0.105143994,
+          0.105031684,
+          0.108198076,
+          0.109613761
+        ]
+      }
+    }
+  }
+}
+

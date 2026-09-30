@@ -1,0 +1,6 @@
+ptxas info    : 0 bytes gmem
+ptxas info    : Compiling entry function '_ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i' for 'sm_100a'
+ptxas info    : Function properties for _ZN7mojo_v84gemmE14CUtensorMap_stS0_S0_i
+    16 bytes stack frame, 16 bytes spill stores, 20 bytes spill loads
+ptxas info    : Used 40 registers, used 3 barriers, 16 bytes cumulative stack size
+ptxas info    : Compile time = 76.595 ms

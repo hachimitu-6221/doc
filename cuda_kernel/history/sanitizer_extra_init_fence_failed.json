@@ -1,0 +1,192 @@
+{
+  "timestamp_utc": "2026-09-22T04:27:29.847535+00:00",
+  "cuda_image": "nvidia/cuda:12.8.1-devel-ubuntu24.04",
+  "sanitizer_package": "cuda-sanitizer-13-0_13.0.85-1_amd64.deb",
+  "sanitizer_package_sha256": "5913520009ecc86be1c62b5793b032f81fdffdfcd4493da6212e14c3dc1f35a4",
+  "scope": "unfiltered: custom kernels and cuBLAS",
+  "repeats": 3,
+  "passed": false,
+  "source_sha256": {
+    "v4.cu": "b50859f6d9b8fb6d790bf64bbfc763335240be2001b73fa0415276132a77cf74",
+    "v5.cu": "40d83e1b86b597d6d0b90b0ed799ccec21ab2233662accd63af098513792a6bd",
+    "v6.cu": "fdbd4a1dbac66df7eb33bf0504efbf1a626441238886c57f646f7fb2cd3cf138",
+    "benchmark_v4.cu": "a6e8e63f525acddb68371a4a6164fd33d3c4200c92073b0fdea32e2b36739662",
+    "benchmark_v5.cu": "d20a35a5335165f3b5b1bc913042f3f12ba51e263a7f5e486fb403afcdf01814",
+    "benchmark_v6.cu": "8ecd06438b76428bf326fd57089db926313a0b5a4a959d42db00bd95f0438c52"
+  },
+  "logs": [
+    {
+      "command": [
+        "nvidia-smi"
+      ],
+      "output": "Tue Sep 22 04:25:18 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.95.05              Driver Version: 580.95.05      CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA B200                    On  |   00000000:03:00.0 Off |                    0 |\n| N/A   37C    P0            193W / 1000W |       4MiB / 183359MiB |      0%      Default |\n|                                         |                        |             Disabled |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 0.12833926099999993
+    },
+    {
+      "command": [
+        "/usr/local/cuda-12.8/bin/nvcc",
+        "--version"
+      ],
+      "output": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Fri_Feb_21_20:23:50_PST_2025\nCuda compilation tools, release 12.8, V12.8.93\nBuild cuda_12.8.r12.8/compiler.35583870_0\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 0.006752551000000051
+    },
+    {
+      "command": [
+        "compute-sanitizer",
+        "--version"
+      ],
+      "output": "NVIDIA (R) Compute Sanitizer\nCopyright (c) 2020-2025 NVIDIA Corporation\nVersion 2025.1.0.0 (build 35583870) (public-release)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 0.011285639000000014
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--version"
+      ],
+      "output": "NVIDIA (R) Compute Sanitizer\nCopyright (c) 2020-2025 NVIDIA Corporation\nVersion 2025.3.1.0 (build 36400806) (public-release)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 0.006944891000000064
+    },
+    {
+      "command": [
+        "/usr/local/cuda-12.8/bin/nvcc",
+        "-std=c++17",
+        "-O3",
+        "-lineinfo",
+        "-arch=sm_100a",
+        "-DMOJO_V6_MMA_N=256",
+        "/root/benchmark_v4.cu",
+        "-o",
+        "/root/benchmark_v4_mma256",
+        "-L/usr/local/cuda-12.8/lib64/stubs",
+        "-lcuda",
+        "-lcublas"
+      ],
+      "output": "",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 2.2881993560000002
+    },
+    {
+      "command": [
+        "/usr/local/cuda-12.8/bin/nvcc",
+        "-std=c++17",
+        "-O3",
+        "-lineinfo",
+        "-arch=sm_100a",
+        "-DMOJO_V6_MMA_N=256",
+        "/root/benchmark_v5.cu",
+        "-o",
+        "/root/benchmark_v5_mma256",
+        "-L/usr/local/cuda-12.8/lib64/stubs",
+        "-lcuda",
+        "-lcublas"
+      ],
+      "output": "",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 2.232879733
+    },
+    {
+      "command": [
+        "/usr/local/cuda-12.8/bin/nvcc",
+        "-std=c++17",
+        "-O3",
+        "-lineinfo",
+        "-arch=sm_100a",
+        "-DMOJO_V6_MMA_N=256",
+        "/root/benchmark_v6.cu",
+        "-o",
+        "/root/benchmark_v6_mma256",
+        "-L/usr/local/cuda-12.8/lib64/stubs",
+        "-lcuda",
+        "-lcublas"
+      ],
+      "output": "",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 2.3583339939999997
+    },
+    {
+      "command": [
+        "/usr/local/cuda-12.8/bin/nvcc",
+        "-std=c++17",
+        "-O3",
+        "-lineinfo",
+        "-arch=sm_100a",
+        "-DMOJO_V6_MMA_N=128",
+        "/root/benchmark_v6.cu",
+        "-o",
+        "/root/benchmark_v6_mma128",
+        "-L/usr/local/cuda-12.8/lib64/stubs",
+        "-lcuda",
+        "-lcublas"
+      ],
+      "output": "",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 2.1377319729999993
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "memcheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v4_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; single stage; stmatrix + TMA output; TMEM=512\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= ERROR SUMMARY: 0 errors\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 1.435715793
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "synccheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v4_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; single stage; stmatrix + TMA output; TMEM=512\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= ERROR SUMMARY: 0 errors\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 0.8104812550000009
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v4_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\n",
+      "returncode": -9,
+      "timed_out": true,
+      "seconds": 120.059486092
+    }
+  ]
+}

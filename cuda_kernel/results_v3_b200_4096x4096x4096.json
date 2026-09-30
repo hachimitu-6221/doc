@@ -1,0 +1,205 @@
+{
+  "gpu": "NVIDIA B200",
+  "sms": 148,
+  "cuda_runtime": 12080,
+  "driver": 13000,
+  "cublas_version": 120804,
+  "m": 4096,
+  "n": 4096,
+  "k": 4096,
+  "warmup": 100,
+  "iterations": 100,
+  "rounds": 7,
+  "graph_warmup_replays": 50,
+  "custom_ms": 0.497867852,
+  "cublas_ms": 0.089802563,
+  "custom_tflops": 276.055087,
+  "cublas_tflops": 1530.456911,
+  "throughput_percent": 18.03743,
+  "max_abs_error": 0,
+  "relative_l2": 0,
+  "custom_ms_samples": [
+    0.48644799,
+    0.522078097,
+    0.497568011,
+    0.50855875,
+    0.498449594,
+    0.4956429,
+    0.497867852
+  ],
+  "cublas_ms_samples": [
+    0.089869119,
+    0.089655675,
+    0.089866877,
+    0.08967904,
+    0.089802563,
+    0.089696318,
+    0.090050876
+  ],
+  "timestamp_utc": "2026-09-19T16:48:11.333247+00:00",
+  "cuda_image": "nvidia/cuda:12.8.1-devel-ubuntu24.04",
+  "timing": "CUDA Graph, 50 alternating warmup replays each, 100 GEMMs/replay, CUDA events, alternating order, median of 7 rounds",
+  "baseline": "cublasGemmEx, CUBLAS_COMPUTE_32F, reduced-precision reduction disabled",
+  "source_sha256": {
+    "v3.cu": "4c1612d76f6ea4529a93f2d5f3d2aa56c09724cc192e8b1f94e9b81595e36edb",
+    "benchmark_v3.cu": "d30922e263cdc3ddeaab262bbfab0a5f88ac88dedf284f73f5e47cc8d6bfdb1e",
+    "v3.mojo": "0ff10464b122fae1aff73742f95c79ac95be97ab6db1e0db391e442257e50594"
+  },
+  "logs": [
+    {
+      "command": [
+        "nvidia-smi"
+      ],
+      "output": "Sat Sep 19 16:47:56 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.95.05              Driver Version: 580.95.05      CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA B200                    On  |   00000000:F3:00.0 Off |                    0 |\n| N/A   29C    P0            189W / 1000W |       6MiB / 183359MiB |      0%      Default |\n|                                         |                        |             Disabled |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n"
+    },
+    {
+      "command": [
+        "nvcc",
+        "--version"
+      ],
+      "output": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Fri_Feb_21_20:23:50_PST_2025\nCuda compilation tools, release 12.8, V12.8.93\nBuild cuda_12.8.r12.8/compiler.35583870_0\n"
+    },
+    {
+      "command": [
+        "nvcc",
+        "-std=c++17",
+        "-O3",
+        "-lineinfo",
+        "-arch=sm_100a",
+        "-Xptxas=-v",
+        "/root/benchmark_v3.cu",
+        "-o",
+        "/root/benchmark_v3",
+        "-L/usr/local/cuda/lib64/stubs",
+        "-lcuda",
+        "-lcublas"
+      ],
+      "output": "ptxas info    : 0 bytes gmem\nptxas info    : Compiling entry function '_ZN7mojo_v34gemmE14CUtensorMap_stS0_S0_i' for 'sm_100a'\nptxas info    : Function properties for _ZN7mojo_v34gemmE14CUtensorMap_stS0_S0_i\n    0 bytes stack frame, 0 bytes spill stores, 0 bytes spill loads\nptxas info    : Used 137 registers, used 1 barriers\nptxas info    : Compile time = 31.723 ms\n"
+    },
+    {
+      "command": [
+        "/root/benchmark_v3",
+        "--correctness-only",
+        "64",
+        "256",
+        "64"
+      ],
+      "output": "GPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=64 N=256 K=64; BF16 A/B/C, FP32 accumulation; tile=64x256x64; MMA=64x256x16; 128B swizzle; single stage; stmatrix + TMA output; TMEM=512\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n"
+    },
+    {
+      "command": [
+        "/root/benchmark_v3",
+        "--correctness-only",
+        "128",
+        "512",
+        "192"
+      ],
+      "output": "GPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=128 N=512 K=192; BF16 A/B/C, FP32 accumulation; tile=64x256x64; MMA=64x256x16; 128B swizzle; single stage; stmatrix + TMA output; TMEM=512\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n"
+    },
+    {
+      "command": [
+        "/root/benchmark_v3",
+        "--correctness-only",
+        "192",
+        "768",
+        "576"
+      ],
+      "output": "GPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=192 N=768 K=576; BF16 A/B/C, FP32 accumulation; tile=64x256x64; MMA=64x256x16; 128B swizzle; single stage; stmatrix + TMA output; TMEM=512\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n"
+    },
+    {
+      "command": [
+        "/root/benchmark_v3",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "64"
+      ],
+      "output": "GPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=64; BF16 A/B/C, FP32 accumulation; tile=64x256x64; MMA=64x256x16; 128B swizzle; single stage; stmatrix + TMA output; TMEM=512\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n"
+    },
+    {
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "memcheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v3",
+        "--correctness-only",
+        "192",
+        "512",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=192 N=512 K=576; BF16 A/B/C, FP32 accumulation; tile=64x256x64; MMA=64x256x16; 128B swizzle; single stage; stmatrix + TMA output; TMEM=512\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= ERROR SUMMARY: 0 errors\n"
+    },
+    {
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "synccheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v3",
+        "--correctness-only",
+        "192",
+        "512",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=192 N=512 K=576; BF16 A/B/C, FP32 accumulation; tile=64x256x64; MMA=64x256x16; 128B swizzle; single stage; stmatrix + TMA output; TMEM=512\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= ERROR SUMMARY: 0 errors\n"
+    },
+    {
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v3",
+        "--correctness-only",
+        "192",
+        "512",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=192 N=512 K=576; BF16 A/B/C, FP32 accumulation; tile=64x256x64; MMA=64x256x16; 128B swizzle; single stage; stmatrix + TMA output; TMEM=512\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n"
+    },
+    {
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v3",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=64x256x64; MMA=64x256x16; 128B swizzle; single stage; stmatrix + TMA output; TMEM=512\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n"
+    },
+    {
+      "command": [
+        "nvidia-smi",
+        "--query-gpu=name,clocks.sm,clocks.mem,power.draw,power.limit,temperature.gpu",
+        "--format=csv"
+      ],
+      "output": "name, clocks.current.sm [MHz], clocks.current.memory [MHz], power.draw [W], power.limit [W], temperature.gpu\nNVIDIA B200, 1965 MHz, 3996 MHz, 251.02 W, 1000.00 W, 30\n"
+    },
+    {
+      "command": [
+        "/root/benchmark_v3",
+        "4096",
+        "4096",
+        "4096"
+      ],
+      "output": "GPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=4096; BF16 A/B/C, FP32 accumulation; tile=64x256x64; MMA=64x256x16; 128B swizzle; single stage; stmatrix + TMA output; TMEM=512\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\nCUDA v3: 0.497868 ms, 276.06 TFLOPS\ncuBLAS:  0.089803 ms, 1530.46 TFLOPS\nCUDA/cuBLAS throughput: 18.04%; CUDA latency / cuBLAS: 5.544x\nRESULT_JSON={\"gpu\":\"NVIDIA B200\",\"sms\":148,\"cuda_runtime\":12080,\"driver\":13000,\"cublas_version\":120804,\"m\":4096,\"n\":4096,\"k\":4096,\"warmup\":100,\"iterations\":100,\"rounds\":7,\"graph_warmup_replays\":50,\"custom_ms\":0.497867852,\"cublas_ms\":0.089802563,\"custom_tflops\":276.055087,\"cublas_tflops\":1530.456911,\"throughput_percent\":18.037430,\"max_abs_error\":0,\"relative_l2\":0,\"custom_ms_samples\":[0.486447990,0.522078097,0.497568011,0.508558750,0.498449594,0.495642900,0.497867852],\"cublas_ms_samples\":[0.089869119,0.089655675,0.089866877,0.089679040,0.089802563,0.089696318,0.090050876]}\n"
+    },
+    {
+      "command": [
+        "nvidia-smi",
+        "--query-gpu=name,clocks.sm,clocks.mem,power.draw,power.limit,temperature.gpu",
+        "--format=csv"
+      ],
+      "output": "name, clocks.current.sm [MHz], clocks.current.memory [MHz], power.draw [W], power.limit [W], temperature.gpu\nNVIDIA B200, 1965 MHz, 3996 MHz, 555.63 W, 1000.00 W, 34\n"
+    }
+  ]
+}

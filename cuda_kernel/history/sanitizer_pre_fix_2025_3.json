@@ -1,0 +1,730 @@
+{
+  "timestamp_utc": "2026-09-22T04:05:17.119161+00:00",
+  "cuda_image": "nvidia/cuda:12.8.1-devel-ubuntu24.04",
+  "sanitizer_package": "cuda-sanitizer-13-0_13.0.85-1_amd64.deb",
+  "sanitizer_package_sha256": "5913520009ecc86be1c62b5793b032f81fdffdfcd4493da6212e14c3dc1f35a4",
+  "scope": "unfiltered: custom kernels and cuBLAS",
+  "repeats": 5,
+  "passed": false,
+  "source_sha256": {
+    "v5.cu": "6482cd9608337906c9707eef49a5d6f1185ffd83f1821aeac87262459c6f3f2a",
+    "v6.cu": "0a101c362ee2ded5d3ecc99181e004928c15edb6663b2861ec9b22b503753ec6",
+    "benchmark_v5.cu": "d20a35a5335165f3b5b1bc913042f3f12ba51e263a7f5e486fb403afcdf01814",
+    "benchmark_v6.cu": "8ecd06438b76428bf326fd57089db926313a0b5a4a959d42db00bd95f0438c52",
+    "sanitizer_probe_v6.cu": "47202f63a29fdc8f55ca7ed8400b4902fca1ee5fa527c7394bda8e027736fe83"
+  },
+  "logs": [
+    {
+      "command": [
+        "nvidia-smi"
+      ],
+      "output": "Tue Sep 22 04:01:40 2026       \n+-----------------------------------------------------------------------------------------+\n| NVIDIA-SMI 580.95.05              Driver Version: 580.95.05      CUDA Version: 13.0     |\n+-----------------------------------------+------------------------+----------------------+\n| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |\n| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |\n|                                         |                        |               MIG M. |\n|=========================================+========================+======================|\n|   0  NVIDIA B200                    On  |   00000000:76:00.0 Off |                    0 |\n| N/A   29C    P0            197W / 1000W |       4MiB / 183359MiB |      0%      Default |\n|                                         |                        |             Disabled |\n+-----------------------------------------+------------------------+----------------------+\n\n+-----------------------------------------------------------------------------------------+\n| Processes:                                                                              |\n|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |\n|        ID   ID                                                               Usage      |\n|=========================================================================================|\n|  No running processes found                                                             |\n+-----------------------------------------------------------------------------------------+\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 0.13381710400000002
+    },
+    {
+      "command": [
+        "/usr/local/cuda-12.8/bin/nvcc",
+        "--version"
+      ],
+      "output": "nvcc: NVIDIA (R) Cuda compiler driver\nCopyright (c) 2005-2025 NVIDIA Corporation\nBuilt on Fri_Feb_21_20:23:50_PST_2025\nCuda compilation tools, release 12.8, V12.8.93\nBuild cuda_12.8.r12.8/compiler.35583870_0\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 0.01577566099999994
+    },
+    {
+      "command": [
+        "compute-sanitizer",
+        "--version"
+      ],
+      "output": "NVIDIA (R) Compute Sanitizer\nCopyright (c) 2020-2025 NVIDIA Corporation\nVersion 2025.1.0.0 (build 35583870) (public-release)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 0.02519747200000011
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--version"
+      ],
+      "output": "NVIDIA (R) Compute Sanitizer\nCopyright (c) 2020-2025 NVIDIA Corporation\nVersion 2025.3.1.0 (build 36400806) (public-release)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 0.012810761999999976
+    },
+    {
+      "command": [
+        "/usr/local/cuda-12.8/bin/nvcc",
+        "-std=c++17",
+        "-O3",
+        "-lineinfo",
+        "-arch=sm_100a",
+        "-DMOJO_V6_MMA_N=256",
+        "/root/benchmark_v5.cu",
+        "-o",
+        "/root/benchmark_v5_mma256",
+        "-L/usr/local/cuda-12.8/lib64/stubs",
+        "-lcuda",
+        "-lcublas"
+      ],
+      "output": "",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 4.266179413
+    },
+    {
+      "command": [
+        "/usr/local/cuda-12.8/bin/nvcc",
+        "-std=c++17",
+        "-O3",
+        "-lineinfo",
+        "-arch=sm_100a",
+        "-DMOJO_V6_MMA_N=256",
+        "/root/benchmark_v6.cu",
+        "-o",
+        "/root/benchmark_v6_mma256",
+        "-L/usr/local/cuda-12.8/lib64/stubs",
+        "-lcuda",
+        "-lcublas"
+      ],
+      "output": "",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 3.759394007
+    },
+    {
+      "command": [
+        "/usr/local/cuda-12.8/bin/nvcc",
+        "-std=c++17",
+        "-O3",
+        "-lineinfo",
+        "-arch=sm_100a",
+        "-DMOJO_V6_MMA_N=128",
+        "/root/benchmark_v6.cu",
+        "-o",
+        "/root/benchmark_v6_mma128",
+        "-L/usr/local/cuda-12.8/lib64/stubs",
+        "-lcuda",
+        "-lcublas"
+      ],
+      "output": "",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 3.784249504
+    },
+    {
+      "command": [
+        "/usr/local/cuda-12.8/bin/nvcc",
+        "-std=c++17",
+        "-O3",
+        "-lineinfo",
+        "-arch=sm_100a",
+        "/root/sanitizer_probe_v6.cu",
+        "-o",
+        "/root/probe",
+        "-L/usr/local/cuda-12.8/lib64/stubs",
+        "-lcuda",
+        "-lcublas"
+      ],
+      "output": "",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 3.741295729999999
+    },
+    {
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "/root/probe",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nAUDIT: custom launched; waiting for completion\nAUDIT: custom completed: no error\nAUDIT: cuBLAS launch\nAUDIT: cuBLAS completed: no error\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nAUDIT: custom launched; waiting for completion\nAUDIT: custom completed: no error\nAUDIT: cuBLAS launch\nAUDIT: cuBLAS completed: no error\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 4.437213381000003
+    },
+    {
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "/root/probe",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nAUDIT: custom launched; waiting for completion\nAUDIT: custom completed: no error\nAUDIT: cuBLAS launch\nAUDIT: cuBLAS completed: no error\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nAUDIT: custom launched; waiting for completion\nAUDIT: custom completed: no error\nAUDIT: cuBLAS launch\nAUDIT: cuBLAS completed: no error\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 4.108689740999999
+    },
+    {
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "/root/probe",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nAUDIT: custom launched; waiting for completion\nAUDIT: custom completed: no error\nAUDIT: cuBLAS launch\nAUDIT: cuBLAS completed: no error\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nAUDIT: custom launched; waiting for completion\nAUDIT: custom completed: no error\nAUDIT: cuBLAS launch\nAUDIT: cuBLAS completed: no error\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 3.658876108000001
+    },
+    {
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "/root/probe",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nAUDIT: custom launched; waiting for completion\nAUDIT: custom completed: no error\nAUDIT: cuBLAS launch\nAUDIT: cuBLAS completed: no error\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nAUDIT: custom launched; waiting for completion\nAUDIT: custom completed: no error\nAUDIT: cuBLAS launch\nAUDIT: cuBLAS completed: no error\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 3.8405469869999997
+    },
+    {
+      "command": [
+        "compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "/root/probe",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nAUDIT: custom launched; waiting for completion\nAUDIT: custom completed: no error\nAUDIT: cuBLAS launch\nAUDIT: cuBLAS completed: no error\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nAUDIT: custom launched; waiting for completion\nAUDIT: custom completed: no error\nAUDIT: cuBLAS launch\nAUDIT: cuBLAS completed: no error\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 3.835761714
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "memcheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v5_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=5 shared_bytes=229536\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= ERROR SUMMARY: 0 errors\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 1.6489683950000043
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "synccheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v5_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=5 shared_bytes=229536\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= ERROR SUMMARY: 0 errors\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 1.6506536679999968
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v5_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=5 shared_bytes=229536\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 6.512623685000001
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v5_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=5 shared_bytes=229536\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 7.235179608999999
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v5_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=5 shared_bytes=229536\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 7.5070442820000025
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v5_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=5 shared_bytes=229536\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 6.380857003000003
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v5_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\n========= Error: Race reported between Write access at mojo_v5::gemm(CUtensorMap_st, CUtensorMap_st, CUtensorMap_st, int)+0xfffffffffffffe80\n=========     and Read access at mojo_v5::gemm(CUtensorMap_st, CUtensorMap_st, CUtensorMap_st, int)+0x370 in v5.cu:168 [8 hazards]\n========= \nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=5 shared_bytes=229536\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 1 hazard displayed (1 error, 0 warnings)\n",
+      "returncode": 1,
+      "timed_out": false,
+      "seconds": 6.7153724960000005
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v5_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "4096"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=4096; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=5 shared_bytes=229536\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 22.605368552
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "memcheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v6_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= ERROR SUMMARY: 0 errors\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 1.534001644
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "synccheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v6_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= ERROR SUMMARY: 0 errors\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 1.8468389070000057
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 6.687945198999998
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 7.595028190000008
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 6.83047956099999
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 6.673671556000002
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 10.041090525999977
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma256",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "4096"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=4096; BF16 A/B/C, FP32 accumulation; tile=128x128x64 per CTA; MMA=256x256x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=6 shared_bytes=213100\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 18.49456968199999
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "memcheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v6_mma128",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x64x64 per CTA; MMA=256x128x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=8 shared_bytes=213132\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= ERROR SUMMARY: 0 errors\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 1.666395700999999
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "synccheck",
+        "--error-exitcode",
+        "1",
+        "/root/benchmark_v6_mma128",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x64x64 per CTA; MMA=256x128x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=8 shared_bytes=213132\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= ERROR SUMMARY: 0 errors\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 1.6951015850000033
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma128",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x64x64 per CTA; MMA=256x128x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=8 shared_bytes=213132\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 7.190110467000011
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma128",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x64x64 per CTA; MMA=256x128x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=8 shared_bytes=213132\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 7.237724686000007
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma128",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x64x64 per CTA; MMA=256x128x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=8 shared_bytes=213132\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 7.522931700000015
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma128",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x64x64 per CTA; MMA=256x128x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=8 shared_bytes=213132\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 6.9790629139999965
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma128",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "576"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=576; BF16 A/B/C, FP32 accumulation; tile=128x64x64 per CTA; MMA=256x128x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=8 shared_bytes=213132\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 7.3646949070000005
+    },
+    {
+      "command": [
+        "/opt/sanitizer/usr/local/cuda-13.0/compute-sanitizer/compute-sanitizer",
+        "--tool",
+        "racecheck",
+        "--error-exitcode",
+        "1",
+        "--racecheck-deadlock-timeout",
+        "10000",
+        "--racecheck-continue-on-deadlock",
+        "no",
+        "/root/benchmark_v6_mma128",
+        "--correctness-only",
+        "4096",
+        "4096",
+        "4096"
+      ],
+      "output": "========= COMPUTE-SANITIZER\nGPU=NVIDIA B200 SMs=148 CUDA_runtime=12080 driver=13000 cuBLAS=120804\nM=4096 N=4096 K=4096; BF16 A/B/C, FP32 accumulation; tile=128x64x64 per CTA; MMA=256x128x16; cluster=2x1x1; 128B swizzle; warp-specialized pipeline; stmatrix + TMA output; TMEM=512\nAB stages=8 shared_bytes=213132\nPASS: original Mojo identity input, exact comparison (CUDA and cuBLAS)\nPASS: dense random input vs cuBLAS, max_abs_error=0 relative_l2=0; CPU FP64 samples=32\n========= RACECHECK SUMMARY: 0 hazards displayed (0 errors, 0 warnings)\n",
+      "returncode": 0,
+      "timed_out": false,
+      "seconds": 21.83160967500001
+    }
+  ]
+}
