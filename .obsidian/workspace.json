@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "GEMM/blackwell gemm from scratch.md",
+                "file": "cuda_kernel/blackwell gemm from scratch.md",
                 "mode": "preview",
                 "source": false
               },
@@ -203,6 +203,10 @@
   },
   "active": "89e6aaab8b6f40d7",
   "lastOpenFiles": [
+    "cuda_kernel/TASK_STATUS.md",
+    "cuda_kernel/blackwell gemm from scratch.md",
+    "cuda_kernel/README.md",
+    "GEMM/blackwell gemm from scratch.md",
     "cuda_kernel/history/sanitizer_pre_fix_2026_3.json",
     "cuda_kernel/v8_profile/source.txt",
     "cuda_kernel/v8_profile_fixed/v8.ncu-rep",
@@ -213,16 +217,12 @@
     "cuda_kernel/__pycache__/run_v8_modal.cpython-313.pyc",
     "cuda_kernel/__pycache__/run_v4_modal.cpython-313.pyc",
     "cuda_kernel/__pycache__/run_v5_modal.cpython-313.pyc",
-    "cuda_kernel/__pycache__/run_v6_modal.cpython-313.pyc",
-    "cuda_kernel/TASK_STATUS.md",
     "cuda_kernel/README_v5_v6.md",
     "cuda_kernel/README_v4.md",
     "cuda_kernel/README_v3.md",
     "cuda_kernel/README_v8.md",
     "cuda_kernel/README_v2.md",
-    "cuda_kernel/README.md",
     "GEMM/blackwell.md",
-    "GEMM/blackwell gemm from scratch.md",
     "GEMM/GEMM.md",
     "ptx/常见PTX.md",
     "agent/cmu_11768_agent.md",
