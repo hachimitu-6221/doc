@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/important things.md",
+                "file": "cuda/CUDA.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "important things"
+              "title": "CUDA"
             }
           }
         ]
@@ -83,7 +83,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 243.10000610351562
+    "width": 231.89999389648438,
+    "collapsed": true
   },
   "right": {
     "id": "7c083ff4b03fc5b5",
@@ -203,29 +204,31 @@
   },
   "active": "89e6aaab8b6f40d7",
   "lastOpenFiles": [
-    "cuda_kernel/blackwell gemm from scratch.md",
+    "cuda/GEMM/blackwell.md",
+    "cuda/CUDA.md",
+    "cuda",
+    "cuda/GEMM/blackwell gemm from scratch.md",
+    "cuda/GEMM/GEMM.md",
+    "cuda/GEMM/ncu 分析 kernel1 性能.md",
     "docs/important things.md",
-    "cuda_kernel/TASK_STATUS.md",
-    "cuda_kernel/README.md",
-    "GEMM/blackwell gemm from scratch.md",
-    "cuda_kernel/history/sanitizer_pre_fix_2026_3.json",
-    "cuda_kernel/v8_profile/source.txt",
-    "cuda_kernel/v8_profile_fixed/v8.ncu-rep",
-    "cuda_kernel/v8_profile_fixed/source.txt",
-    "cuda_kernel/v8_profile/sass.txt",
-    "cuda_kernel/history/sanitizer_deadlock_detection_failed.json",
-    "cuda_kernel/v8_profile_fixed/sass.txt",
-    "cuda_kernel/__pycache__/run_v8_modal.cpython-313.pyc",
-    "cuda_kernel/__pycache__/run_v4_modal.cpython-313.pyc",
-    "cuda_kernel/__pycache__/run_v5_modal.cpython-313.pyc",
-    "cuda_kernel/README_v5_v6.md",
-    "cuda_kernel/README_v4.md",
-    "cuda_kernel/README_v3.md",
-    "cuda_kernel/README_v8.md",
-    "cuda_kernel/README_v2.md",
-    "GEMM/blackwell.md",
-    "GEMM/GEMM.md",
-    "ptx/常见PTX.md",
+    "cuda/cuda_kernel/blackwell gemm from scratch.md",
+    "cuda/cuda_kernel/TASK_STATUS.md",
+    "cuda/cuda_kernel/README.md",
+    "cuda/cuda_kernel/history/sanitizer_pre_fix_2026_3.json",
+    "cuda/cuda_kernel/v8_profile/source.txt",
+    "cuda/cuda_kernel/v8_profile_fixed/v8.ncu-rep",
+    "cuda/cuda_kernel/v8_profile_fixed/source.txt",
+    "cuda/cuda_kernel/v8_profile/sass.txt",
+    "cuda/cuda_kernel/history/sanitizer_deadlock_detection_failed.json",
+    "cuda/cuda_kernel/v8_profile_fixed/sass.txt",
+    "cuda/cuda_kernel/__pycache__/run_v8_modal.cpython-313.pyc",
+    "cuda/cuda_kernel/__pycache__/run_v4_modal.cpython-313.pyc",
+    "cuda/cuda_kernel/README_v5_v6.md",
+    "cuda/cuda_kernel/README_v4.md",
+    "cuda/cuda_kernel/README_v3.md",
+    "cuda/cuda_kernel/README_v8.md",
+    "cuda/cuda_kernel/README_v2.md",
+    "cuda/ptx/常见PTX.md",
     "agent/cmu_11768_agent.md",
     "agent/from scratch book.md",
     "agent/python.md",
@@ -235,7 +238,6 @@
     "docs/ai-agent-from-scratch/docs/ch04-react-agent.md",
     "docs/ai-agent-from-scratch/docs/ch03-tool-use.md",
     "docs/ai-agent-from-scratch/docs/ch02-llm-api-basics.md",
-    "GEMM/ncu 分析 kernel1 性能.md",
     "python/未命名.md",
     "docs/ai-agent-from-scratch/README.md",
     "Pasted image 20260829195031.png",
@@ -243,7 +245,6 @@
     "Pasted image 20260828225714.png",
     "Pasted image 20260828193003.png",
     "Pasted image 20260828163226.png",
-    "pypto/passes/ADD/02_MergeViewAssemble.md",
     "未命名.canvas"
   ]
 }

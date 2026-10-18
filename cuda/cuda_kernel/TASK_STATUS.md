@@ -12,7 +12,7 @@ BF16 输入/输出、FP32 累加，`M=N=K=4096`；百分比为同场
 
 | 版本 | CUDA / cuBLAS 吞吐量 | 说明 |
 | --- | ---: | --- |
-| v1 | 9.82% | [说明](README.md) |
+| v1 | 9.82% | [说明](cuda/cuda_kernel/README.md) |
 | v2 | 18.24% | [说明](README_v2.md) |
 | v3 | 18.04% | [说明](README_v3.md) |
 | v4 | 25.74% | [说明](README_v4.md)；原 benchmark 的 4096×2560×8192 为 22.50% |
