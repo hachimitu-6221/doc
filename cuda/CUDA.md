@@ -57,4 +57,5 @@ cudaDeviceSynchronize()
 	- 隐藏延迟：256 个线程对应 8 个 Warp，当部分 Warp 等待访存时，Scheduler 可以切换到其他就绪的 Warp。
 	- 提高 Occupancy：适当的 Block Size 有利于让 SM 同时驻留足够多的 Warp。
 	- 平衡资源：256 不算太大，可以降低单个 CTA 对寄存器、Shared Memory 等资源的需求，从而让更多 CTA 同时驻留。
-- 
+- Stream 是 CUDA 提供的逻辑任务队列，它保证同一队列内的执行顺序，同时允许不同队列中的任务在条件允许时并发运行。
+- 异步＋流能在要跑多个kernel的一些场景中能qi'doa
