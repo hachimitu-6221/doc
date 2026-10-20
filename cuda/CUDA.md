@@ -79,3 +79,4 @@ cudaDeviceSynchronize()
 - `__launch_bound__`这种是需要自己调优拿到对应的数据
 - 现代GPU上的缓存行是128字节，由四个32字节扇区组成。在非合并情况下，线程束中的每个线程从分散的地址加载。这导致许多独立的内存事务。即使线程束中的线程访问连续地址，如果第一个地址不是128字节对齐的，线程束的请求也将跨越两个128字节缓存行。
 - 合并访存做的不好在ncu里体现为`lower Global Memory Load Efficiency`、`higher DRAM sector read counts`、` average sectors per request above 4.0`
+- 
