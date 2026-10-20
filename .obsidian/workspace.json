@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "cuda/CUDA.md",
+                "file": "pintos/proj0_pregame.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CUDA"
+              "title": "proj0_pregame"
             }
           },
           {
@@ -214,10 +214,10 @@
       "obsidian-importer:导入笔记": false
     }
   },
-  "active": "89e6aaab8b6f40d7",
+  "active": "548e273ec721ac60",
   "lastOpenFiles": [
-    "pintos/proj0_pregame.md",
     "cuda/CUDA.md",
+    "pintos/proj0_pregame.md",
     "Pasted image 20260829195031.png",
     "pintos",
     "cuda/GEMM/blackwell.md",
