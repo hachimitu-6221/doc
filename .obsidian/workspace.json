@@ -97,7 +97,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 231.89999389648438
+    "width": 231.89999389648438,
+    "collapsed": true
   },
   "right": {
     "id": "7c083ff4b03fc5b5",
@@ -199,7 +200,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -214,7 +216,7 @@
       "obsidian-importer:导入笔记": false
     }
   },
-  "active": "548e273ec721ac60",
+  "active": "89e6aaab8b6f40d7",
   "lastOpenFiles": [
     "cuda/CUDA.md",
     "pintos/proj0_pregame.md",
