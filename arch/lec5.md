@@ -1,0 +1,13 @@
+- nand和nor是逻辑完备的，只用这两可以表示任何布尔方程
+- 硬件设计所需
+	- describe(specify) complex designs
+	- simulate
+	- synthesize
+- HDL/Verilog for describe
+- 设计一般top-down和Bottom-up混用
+- 定义一个module in verilog(A module is the main building block in verilog)
+	- Name of the module
+	- directions of it's ports(input/output)
+	- name of it's ports
+	- functionality of the module
+![[Pasted image 20261024133011.png]]
