@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "cuda/CUDA.md",
+                "file": "roadmap/2026-fall.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CUDA"
+              "title": "2026-fall"
             }
           }
         ]
@@ -202,6 +202,9 @@
   },
   "active": "d214e065281e8b69",
   "lastOpenFiles": [
+    "cuda/CUDA.md",
+    "roadmap/2026-fall.md",
+    "roadmap",
     "file:/Users/alioth/ai_infra/AI-Systems-Performance-Engineering-CH/README.md",
     "docs/important things.md",
     "arch/lec5.md",
@@ -215,7 +218,6 @@
     "minecraft",
     "infra-agent",
     "pintos/proj0_pregame.md",
-    "cuda/CUDA.md",
     "Pasted image 20260829195031.png",
     "pintos",
     "cuda/GEMM/blackwell.md",
@@ -230,7 +232,6 @@
     "cuda/cuda_kernel/v8_profile/source.txt",
     "cuda/cuda_kernel/v8_profile_fixed/v8.ncu-rep",
     "cuda/cuda_kernel/v8_profile_fixed/source.txt",
-    "cuda/cuda_kernel/v8_profile/sass.txt",
     "cuda/cuda_kernel/README_v5_v6.md",
     "cuda/cuda_kernel/README_v4.md",
     "cuda/cuda_kernel/README_v3.md",
@@ -239,7 +240,6 @@
     "cuda/ptx/常见PTX.md",
     "docs/ai-agent-from-scratch/docs/ch06-memory-systems.md",
     "docs/ai-agent-from-scratch/docs/ch07-planning-and-reflection.md",
-    "docs/ai-agent-from-scratch/docs/ch05-rag-and-file-tools.md",
     "Pasted image 20260829180354.png",
     "Pasted image 20260828225714.png",
     "Pasted image 20260828193003.png",
