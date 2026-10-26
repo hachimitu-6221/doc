@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "b51329c467c65837",
+        "id": "c308ff8afc30f787",
         "type": "tabs",
         "children": [
           {
-            "id": "76a00f8bd6713e85",
+            "id": "4116ab58f8be8889",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "file:/Users/alioth/ai_infra/AI-Systems-Performance-Engineering-CH/README.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "README"
+              "title": "新标签页"
             }
           }
         ]
@@ -200,8 +196,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "76a00f8bd6713e85",
+  "active": "4116ab58f8be8889",
   "lastOpenFiles": [
+    "file:/Users/alioth/ai_infra/AI-Systems-Performance-Engineering-CH/README.md",
     "docs/important things.md",
     "arch/lec5.md",
     "agent/python.md",
@@ -239,7 +236,6 @@
     "docs/ai-agent-from-scratch/docs/ch06-memory-systems.md",
     "docs/ai-agent-from-scratch/docs/ch07-planning-and-reflection.md",
     "docs/ai-agent-from-scratch/docs/ch05-rag-and-file-tools.md",
-    "docs/ai-agent-from-scratch/docs/ch04-react-agent.md",
     "Pasted image 20260829180354.png",
     "Pasted image 20260828225714.png",
     "Pasted image 20260828193003.png",
