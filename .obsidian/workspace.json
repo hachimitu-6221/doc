@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "cuda/CUDA.md",
+                "file": "infra-agent/推理.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "CUDA"
+              "title": "推理"
             }
           }
         ]
@@ -202,8 +202,9 @@
   },
   "active": "d214e065281e8b69",
   "lastOpenFiles": [
-    "roadmap/2026-fall.md",
     "cuda/CUDA.md",
+    "未命名",
+    "roadmap/2026-fall.md",
     "roadmap",
     "file:/Users/alioth/ai_infra/AI-Systems-Performance-Engineering-CH/README.md",
     "docs/important things.md",
@@ -231,7 +232,6 @@
     "cuda/cuda_kernel/history/sanitizer_pre_fix_2026_3.json",
     "cuda/cuda_kernel/v8_profile/source.txt",
     "cuda/cuda_kernel/v8_profile_fixed/v8.ncu-rep",
-    "cuda/cuda_kernel/v8_profile_fixed/source.txt",
     "cuda/cuda_kernel/README_v5_v6.md",
     "cuda/cuda_kernel/README_v4.md",
     "cuda/cuda_kernel/README_v3.md",
@@ -239,7 +239,6 @@
     "cuda/cuda_kernel/README_v2.md",
     "cuda/ptx/常见PTX.md",
     "docs/ai-agent-from-scratch/docs/ch06-memory-systems.md",
-    "docs/ai-agent-from-scratch/docs/ch07-planning-and-reflection.md",
     "Pasted image 20260829180354.png",
     "Pasted image 20260828225714.png",
     "Pasted image 20260828193003.png",
