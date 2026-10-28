@@ -86,3 +86,5 @@ cudaDeviceSynchronize()
 |---|---|---|
 |**Global Memory Load／Store Efficiency**|明显偏低|实际传输的数据中，真正被线程使用的比例较低|
 |**Average Sectors Per Request**|明显高于理论理想值|一次访存触及了过多扇区，可能不连续、跨步、随机或对齐不佳|
+- 虽然很多线程访问同一个bank会造成bank conflict，但如果一个warp的32个线程全部访问一个bank，那会触发广播机制，反而不会bank conflict。
+- 分块GEMM：就是每个线程负责盯住C的一个元素，然后搬两个对应的元素（from A/B），for循环是bian l
