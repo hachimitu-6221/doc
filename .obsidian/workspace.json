@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "5c7d346408f60e67",
+        "id": "37a661dd23e18a06",
         "type": "tabs",
         "children": [
           {
-            "id": "d214e065281e8b69",
+            "id": "2a4aa6ecd2c19baa",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "infra-agent/推理.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "推理"
+              "title": "新标签页"
             }
           }
         ]
@@ -200,8 +196,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "d214e065281e8b69",
+  "active": "2a4aa6ecd2c19baa",
   "lastOpenFiles": [
+    "file:/Users/alioth/Documents/一页Wiki/使用说明.md",
+    "infra-agent/推理.md",
     "cuda/CUDA.md",
     "未命名",
     "roadmap/2026-fall.md",
@@ -212,7 +210,6 @@
     "agent/python.md",
     "agent/from scratch book.md",
     "agent/cmu_11768_agent.md",
-    "infra-agent/推理.md",
     "arch",
     "Pasted image 20261024133011.png",
     "minecraft/刷铁机.md",
