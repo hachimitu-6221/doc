@@ -90,4 +90,6 @@ cudaDeviceSynchronize()
 - 分块GEMM：就是每个线程负责盯住C的一个元素，然后搬两个对应的元素（from A/B），for循环是遍历那个A行块和B列块用的。
 - 矩阵转置：出现bank conflict是无法避免的，只要用了sharedMem就一定会发生bank conflict，因为再把元素从sharedMem里输出到output矩阵里的时候，因为一个warp里的32个矩阵是同时运行的，原来一起运行的线程（ID=0，1，2，3，...31）就会一起运行，由于之前是把一行矩阵搬到sharedMem里，现在是把一列矩阵从sharedMem里搬到gmem里，所以只要tile是32 * 32这种就会发生bank conflict，当然我们有几种修复手段，常见的就是给sharedMem矩阵的第1个纬度➕1
 - 对于只读的数据可以加 `const __restirct__` 标记，这样编译器能优化缓存的利用率。
-- Memroy-
+- Memroy-Ralated-stalls: 
+	- long-scoreboard: 一般由全局内存和共享内存之间的传输引起
+	- short-scoreboard: 一般由共享内存和寄存器之间的传输引起
